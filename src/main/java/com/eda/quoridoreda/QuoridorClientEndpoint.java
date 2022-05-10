@@ -24,7 +24,6 @@ public class QuoridorClientEndpoint extends WebSocketClient {
     @Override
     public void onOpen(ServerHandshake handshakedata) {
         logger.info("CONEXION LOGRADA CON EXITO!!!");
-        System.out.println("opened connection");
         // if you plan to refuse connection based on ip or httpfields overload: onWebsocketHandshakeReceivedAsClient
     }
 
@@ -44,9 +43,7 @@ public class QuoridorClientEndpoint extends WebSocketClient {
                 String opponent = json.getJSONObject("data").getString("opponent");
                 if (("juan.ci.caballero@gmail.com").equals(opponent)) {
                     System.out.println("received: " + message);
-                    System.out.println("Oponente " + opponent);
                     Challenge requestChallenge = new Challenge();
-                    System.out.println(json);
                     JSONObject challengeResponse = requestChallenge.acceptChallenge(json);
                     System.out.println("Respuesta " + challengeResponse);
                     System.out.println("Action " + challengeResponse.get("data"));
@@ -55,7 +52,8 @@ public class QuoridorClientEndpoint extends WebSocketClient {
                 }
             }
             case "your_turn" -> {
-                System.out.println("EStoy en yourturn!!!");
+                System.out.println("Your Turn: muestro el tablero.");
+                Board.showBoard(json);
             }
             default ->
                 logger.log(Level.INFO, "ERROR EN onMessage. Evento recibido: {0}", event);
