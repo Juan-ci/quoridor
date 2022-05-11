@@ -4,13 +4,18 @@ import org.json.JSONObject;
 
 public class Board {
 
-    public static void showBoard(JSONObject json) {
+    public static JSONObject showBoard(JSONObject json) {
         JSONObject data = json.getJSONObject("data");
+        int turn = Integer.parseInt(data.getString("remaining_moves"));
+        int totalTurn = 200 - turn;
         char[] board = data.getString("board").toCharArray();
+        String gameId = data.getString("game_id");
         
         //Armo el tablero a un array bidimensional
         char[][] normalizeBoard = armarTablero(board);
         
+        System.out.println("Game id: " + gameId);
+        System.out.println("Turno n°: " + totalTurn);
         //Muestro el tablero normalizado
         for (int i = 0; i < 17; i++) {
             for (int j = 0; j < 17; j++) {
@@ -18,6 +23,10 @@ public class Board {
             }
             System.out.print("\n");
         }
+        
+        
+        //Devolver json con respuesta de mover o poner pared
+        return null;
     }
 
     public static char[][] armarTablero(char[] simpleBoard) {
