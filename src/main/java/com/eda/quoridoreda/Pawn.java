@@ -23,7 +23,7 @@ public class Pawn {
     
     // Function to move pawn N
     public static String northPawn(JSONObject json) {
-    
+        //Mover hacia adelante en primer momento, incrementando índice i
         return null;
     }
     
