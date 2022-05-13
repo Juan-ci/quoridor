@@ -11,11 +11,11 @@ import org.json.JSONObject;
 
 public class QuoridorClientEndpoint extends WebSocketClient {
 
-    private static CountDownLatch latch;
+    //private static CountDownLatch latch;
     private Logger logger = Logger.getLogger(this.getClass().getName());
-    private static final String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoianVhbi5jaS5jYWJhbGxlcm9AZ21haWwuY29tIn0.svm-hP13ElhqvavewnuFcrAFYj661GOVLGVUN-1ZatM";
-    private static final String uriWebSocket
-            = "wss://4yyity02md.execute-api.us-east-1.amazonaws.com/ws?token=" + token;
+    private static final String TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoianVhbi5jaS5jYWJhbGxlcm9AZ21haWwuY29tIn0.svm-hP13ElhqvavewnuFcrAFYj661GOVLGVUN-1ZatM";
+    private static final String URI_WEB_SOCKET
+            = "wss://4yyity02md.execute-api.us-east-1.amazonaws.com/ws?token=" + TOKEN;
 
     public QuoridorClientEndpoint(URI serverUri) {
         super(serverUri);
@@ -53,7 +53,14 @@ public class QuoridorClientEndpoint extends WebSocketClient {
             }
             case "your_turn" -> {
                 System.out.println("Your Turn: muestro el tablero.");
-                Board.showBoard(json);
+                //Envío el json tal cual lo recibo
+                String response = Board.showBoard(json);
+                System.out.println("MUESTRO la respuesta de movimiento" + response);
+                
+                send(response);
+            }
+            case "game_over" -> {
+                System.out.println("Game over.");
             }
             default ->
                 logger.log(Level.INFO, "ERROR EN onMessage. Evento recibido: {0}", event);
@@ -76,7 +83,7 @@ public class QuoridorClientEndpoint extends WebSocketClient {
 
     public static void main(String[] args) throws URISyntaxException {
         QuoridorClientEndpoint c = new QuoridorClientEndpoint(
-                new URI(uriWebSocket));
+                new URI(URI_WEB_SOCKET));
         c.connect();
     }
 }
