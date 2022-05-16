@@ -2,7 +2,6 @@ package com.eda.quoridoreda;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.java_websocket.client.WebSocketClient;

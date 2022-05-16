@@ -22,8 +22,6 @@ public class Board {
             rowCol[0] = is row position
             rowCol[1] = is col position
          */
-        //int[] rowCol = new int[2];
-        // Name of pawn and concat number of pawn
         String nameNPawn = "Pawn N ";
         String nameSPawn = "Pawn S ";
 
@@ -75,7 +73,7 @@ public class Board {
         return response;
     }
 
-    public static char[][] armarTablero(char[] simpleBoard) {
+    private static char[][] armarTablero(char[] simpleBoard) {
         char[][] boardReady = new char[17][17];
         int count = 0;
 
