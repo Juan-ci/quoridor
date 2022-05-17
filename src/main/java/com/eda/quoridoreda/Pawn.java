@@ -12,11 +12,9 @@ public class Pawn {
 
         switch (namePawn) {
             case "N" -> {
-                System.out.println("Estoy en switch case N");
                 response = northPawn(data, positionPawns, normalizeBoard);
             }
             case "S" -> {
-                System.out.println("Estoy en switch case S");
                 response = southPawn(data, positionPawns, normalizeBoard);
             }
             default ->
@@ -25,48 +23,48 @@ public class Pawn {
         return response;
     }
 
-    // Function to move pawn N, recibo jsonObject data, map con nombre peon y posicion, y tablero
-    public static String northPawn(JSONObject json, Map<String, int[]> positionPawns, char[][] normalizeBoard) {
-        //Mover hacia adelante en primer momento, incrementando índice i
+    // Function to move pawn N, receive jsonObject data, map with pawn name and position, board
+    private static String northPawn(JSONObject json, Map<String, int[]> positionPawns, char[][] normalizeBoard) {
         String gameId = json.getString("game_id");
         System.out.println("GAME ID: " + gameId);
         String turnToken = json.getString("turn_token");
         System.out.println("TURN TOKEN: " + turnToken);
+        char side = json.getString("side").charAt(0);
+        int[] currentPositionPawnToMove = new int[2];
+        int[] nextPosition = new int[2];
+
+        //Current position pawn 1, in normalized board 17x17
+        int currentRow = 0;
+        int currentCol = 0;
 
         //Next position
         int nextRow = 0;
         int nextCol = 0;
 
         int[] pawnN1 = positionPawns.get("Pawn N 1");
-
-        System.out.println("Pawn a mover " + normalizeBoard[pawnN1[0]][pawnN1[1]]);
-
-        //Current position pawn 1, in normalized board 17x17
-        int currentRow = pawnN1[0];
-        int currentCol = pawnN1[1];
-        System.out.println("Fila de N 1: " + currentRow + " Columna de N: " + currentCol);
-        
         int[] pawnN2 = positionPawns.get("Pawn N 2");
-        System.out.println("Fila de N 2: " + pawnN2[0] + " Columna de N: " + pawnN2[1]);
-        
         int[] pawnN3 = positionPawns.get("Pawn N 3");
-        System.out.println("Fila de N 3: " + pawnN3[0] + " Columna de N: " + pawnN3[1]);
 
-        /*
-            En caso de usar a futuro las posiciones del peon oponente
-            int[] pawnS1 = positionPawns.get("Pawn S 1");
-            int[] pawnS2 = positionPawns.get("Pawn S 2");
-            int[] pawnS3 = positionPawns.get("Pawn S 3");
-         */
-        //agregar verificación de pared entre medio del peon oponente
-        if (normalizeBoard[currentRow + 2][currentCol] == ' ') {
-            nextRow = currentRow + 2;
-            nextCol = currentCol;
-        } else if (normalizeBoard[currentRow + 2][currentCol] == 'S' && normalizeBoard[currentRow + 4][currentCol] == ' ') {
-            nextRow = currentRow + 4;
-            nextCol = currentCol;
-        }
-        
+        int[] pawnS1 = positionPawns.get("Pawn S 1");
+        int[] pawnS2 = positionPawns.get("Pawn S 2");
+        int[] pawnS3 = positionPawns.get("Pawn S 3");
+
+        currentPositionPawnToMove = choosePawnToMove(side, pawnN1, pawnN2, pawnN3);
+        currentRow = currentPositionPawnToMove[0];
+        currentCol = currentPositionPawnToMove[1];
+
+        if (checkMoveForward(normalizeBoard, currentPositionPawnToMove, side)) {
+            nextPosition = moveForward(normalizeBoard, currentPositionPawnToMove, side);
+
+            nextRow = nextPosition[0];
+            nextCol = nextPosition[1];
+        } else if (checkMoveRight(normalizeBoard, currentPositionPawnToMove, side)) {
+            nextPosition = moveRight(normalizeBoard, currentPositionPawnToMove, side);
+
+            nextRow = nextPosition[0];
+            nextCol = nextPosition[1];
+        } //Add move Left
+
         currentRow /= 2;
         currentCol /= 2;
         nextRow /= 2;
@@ -93,45 +91,53 @@ public class Pawn {
     }
 
     // Function to move pawn S
-    public static String southPawn(JSONObject json, Map<String, int[]> positionPawns, char[][] normalizeBoard) {
-        //Mover hacia adelante en primer momento, decrementando índice i
-
+    private static String southPawn(JSONObject json, Map<String, int[]> positionPawns, char[][] normalizeBoard) {
         String gameId = json.getString("game_id");
         String turnToken = json.getString("turn_token");
         JSONObject jsonResponse = new JSONObject();
+        char side = json.getString("side").charAt(0);
+        int[] currentPositionPawnToMove = new int[2];
+        int[] nextPosition = new int[2];
+
+        //Current position pawn 1
+        int currentRow = 0;
+        int currentCol = 0;
 
         //Next position
         int nextRow = 0;
         int nextCol = 0;
 
+        //En caso de usar a futuro las posiciones del peon oponente
+        int[] pawnS1 = positionPawns.get("Pawn S 1");
+        int[] pawnS2 = positionPawns.get("Pawn S 2");
+        int[] pawnS3 = positionPawns.get("Pawn S 3");
+
         int[] pawnN1 = positionPawns.get("Pawn N 1");
-        //Current position pawn 1
         int[] pawnN2 = positionPawns.get("Pawn N 2");
         int[] pawnN3 = positionPawns.get("Pawn N 3");
 
-        //En caso de usar a futuro las posiciones del peon oponente
-        int[] pawnS1 = positionPawns.get("Pawn S 1");
-        //Current position pawn 1
-        int currentRow = pawnS1[0] / 2;
-        int currentCol = pawnS1[1] / 2;
-        System.out.println("Fila de S: " + pawnS1[0] + " Columna de S: " + pawnS1[1]);
-        int[] pawnS2 = positionPawns.get("Pawn S 2");
-        System.out.println("Fila de S: " + pawnS2[0] + " Columna de S: " + pawnS2[1]);
-        int[] pawnS3 = positionPawns.get("Pawn S 3");
-        System.out.println("Fila de S: " + pawnS3[0] + " Columna de S: " + pawnS3[1]);
+        currentPositionPawnToMove = choosePawnToMove(side, pawnS1, pawnS2, pawnS3);
+        currentRow = currentPositionPawnToMove[0];
+        currentCol = currentPositionPawnToMove[1];
 
-        if (normalizeBoard[currentRow - 1][currentCol] == ' ') {
-            nextRow = currentRow - 1;
-            nextCol = currentCol;
-        } else if (normalizeBoard[currentRow - 1][currentCol] == 'N' && normalizeBoard[currentRow - 2][currentCol] == ' ') {
-            nextRow = currentRow - 2;
-            nextCol = currentCol;
-        }
+        if (checkMoveForward(normalizeBoard, currentPositionPawnToMove, side)) {
+            nextPosition = moveForward(normalizeBoard, currentPositionPawnToMove, side);
 
-        /*
-            AGREGAR EL MOSTRAR TABLERO Y VER SI MUEVE LA FICHA------
-         */
-        //Armando json object 'data'
+            nextRow = nextPosition[0];
+            nextCol = nextPosition[1];
+        } else if (checkMoveRight(normalizeBoard, currentPositionPawnToMove, side)) {
+            nextPosition = moveRight(normalizeBoard, currentPositionPawnToMove, side);
+
+            nextRow = nextPosition[0];
+            nextCol = nextPosition[1];
+        } //Add move Left
+
+        currentRow /= 2;
+        currentCol /= 2;
+        nextRow /= 2;
+        nextCol /= 2;
+
+        //Armando json object 'data' response
         JSONObject data = new JSONObject();
         data.put("game_id", gameId);
         data.put("turn_token", turnToken);
@@ -147,12 +153,245 @@ public class Pawn {
         return jsonResponse.toString();
     }
 
-    public int[] checkNextPosition(int[] currentPosition, String namePawn) {
-        /*
-        Si está vacío, ir hacia adelante, si hay un peon contrario, saltarlo,
-        y si está en la úlitma fila, mover para el costado
-         */
+    private static int[] choosePawnToMove(char namePawn, int[] pawn1, int[] pawn2, int[] pawn3) {
 
-        return null;
+        switch (namePawn) {
+            case 'N' -> {
+                if (pawn1[0] > pawn2[0] && pawn1[0] > pawn3[0]) {
+                    return pawn1;
+                } else if (pawn2[0] > pawn3[0] && pawn2[0] > pawn1[0]) {
+                    return pawn2;
+                } else {    //Agregar else if si todos están en la misma fila
+                    return pawn3;
+                }
+            }
+            case 'S' -> {
+                if (pawn1[0] < pawn2[0] && pawn1[0] < pawn3[0]) {   //Verifica cual está más adelantado
+                    return pawn1;
+                } else if (pawn2[0] < pawn3[0] && pawn2[0] < pawn1[0]) {
+                    return pawn2;
+                } else if (pawn1[0] == pawn2[0] && pawn1[0] == pawn3[0]) {  //Si todos estan iguales, avanza peon2
+                    return pawn2;
+                } else {
+                    return pawn3;
+                }
+            }
+            default -> {
+                System.out.println("ERROR IN CLASS Pawn METHOD choosePawnToMove.");
+                return null;
+            }
+        }
+    }
+
+    private static boolean checkMoveForward(char[][] normalizeBoard, int[] currentPosition, char pawn) {
+        int currentRow = currentPosition[0];
+        int currentCol = currentPosition[1];
+        boolean moveAllowed = false;
+
+        System.out.println("Checking move forward...");
+        switch (pawn) {
+            case 'N' -> {
+                if (normalizeBoard[currentRow + 2][currentCol] == 'S' && (currentRow + 2) == 16) {
+                    return moveAllowed;
+                }
+                for (int i = currentRow + 1; i < 17; i++) {
+                    if (normalizeBoard[i][currentCol] == '-') { //Check wall
+                        return moveAllowed;
+                    }
+                    if (i < 13 && normalizeBoard[i + 1][currentCol] == 'S' //Check enemie
+                            && normalizeBoard[i + 2][currentCol] == ' ' //Check there isn´t a wall
+                            && normalizeBoard[i + 3][currentCol] == ' ') {
+                        moveAllowed = true;
+                        return moveAllowed;
+                    }
+                }
+            }
+            case 'S' -> {
+                if (normalizeBoard[currentRow - 2][currentCol] == 'N' && (currentRow - 2) == 0) {
+                    return moveAllowed;
+                }
+                for (int i = currentRow - 1; i > 0; i--) {
+                    if (normalizeBoard[i][currentCol] == '-') {
+                        return moveAllowed;
+                    }
+                    if (i > 4 && normalizeBoard[i - 1][currentCol] == 'N' //Check enemie
+                            && normalizeBoard[i - 2][currentCol] == ' ' //Check there isn´t a wall
+                            && normalizeBoard[i - 3][currentCol] == ' ') {
+                        moveAllowed = true;
+                        return moveAllowed;
+                    }
+                }
+            }
+            default -> {
+                System.out.println("ERROR IN CLASS Pawn METHOD moveForward");
+                return false;
+            }
+        }
+        moveAllowed = true;
+
+        return moveAllowed;
+    }
+
+    private static boolean checkMoveRight(char[][] normalizeBoard, int[] currentPosition, char side) {
+        int currentRow = currentPosition[0];
+        int currentCol = currentPosition[1];
+        boolean moveAllowed = false;
+
+        System.out.println("Checking move right...");
+        switch (side) {
+            case 'N': {
+                //check 1 step right, if is empty then check 1 step forward
+                if (currentCol == 16) {
+                    return moveAllowed;
+                }
+                for (int j = currentCol + 1; j < 17; j++) {
+                    if (normalizeBoard[currentRow][j] == ' ' && j < 17) {            //Check if there isn´t a wall
+                        if (normalizeBoard[currentRow][j + 1] == ' ' //Check if there isn´t a pawn enemie
+                                && normalizeBoard[currentRow + 1][j + 1] == ' ') {  //Check if there isn´t also a wall forward
+                            moveAllowed = true;
+                            return moveAllowed;
+                        }
+                    }
+                }
+            }
+            case 'S': {
+                if (currentCol == 16) {
+                    return moveAllowed;
+                }
+                for (int j = currentCol + 1; j < 17; j++) {
+                    if (normalizeBoard[currentRow][j] == ' ' && j < 16) {            //Check if there isn´t a wall
+                        if (normalizeBoard[currentRow][j + 1] == ' ' //Check if there isn´t a pawn enemie
+                                && normalizeBoard[currentRow - 1][j + 1] == ' ') {  //Check if there isn´t also a wall forward to next move
+                            moveAllowed = true;
+                            return moveAllowed;
+                        }
+                    }
+                }
+            }
+            default: {
+                System.out.println("ERROR IN CLASS Pawn METHOD checkMoveRight.");
+            }
+        }
+        return moveAllowed;
+    }
+
+    //Move
+    private static int[] moveForward(char[][] normalizeBoard, int[] currentPosition, char side) {
+        System.out.println("Move Forward");
+        int currentRow = currentPosition[0];
+        int currentCol = currentPosition[1];
+        int[] nextPosition = new int[2];
+
+        //Agregar switch N, S para mover adelante
+        switch (side) {
+            case 'N' -> {
+                if (normalizeBoard[currentRow + 2][currentCol] == ' ') {
+                    System.out.println("Single Step");
+                    //Single step
+                    nextPosition[0] = currentRow + 2;
+                    nextPosition[1] = currentCol;
+                }
+                if (normalizeBoard[currentRow + 2][currentCol] == 'S') {
+                    if (currentRow + 4 < 17) {   //Check is inside the board
+                        System.out.println("Step to jump");
+                        //Next position to jump
+                        nextPosition[0] = currentRow + 4;
+                        nextPosition[1] = currentCol;
+                    }
+                }
+            }
+            case 'S' -> {
+                if (normalizeBoard[currentRow - 2][currentCol] == ' ') {
+                    System.out.println("Single Step");
+                    //Single step
+                    nextPosition[0] = currentRow - 2;
+                    nextPosition[1] = currentCol;
+                }
+                if (normalizeBoard[currentRow - 2][currentCol] == 'N') {
+                    if (currentRow - 4 > 0) {   //Check is inside the board
+                        System.out.println("Step to jump");
+                        //Next position to jump
+                        nextPosition[0] = currentRow - 4;
+                        nextPosition[1] = currentCol;
+                    }
+                }
+            }
+            default -> {
+                System.out.println("ERROR IN moveForward CLASS Pawn.");
+            }
+        }
+        return nextPosition;
+    }
+
+    private static int[] moveRight(char[][] normalizeBoard, int[] currentPosition, char side) {
+        System.out.println("Move Right");
+        int currentRow = currentPosition[0];
+        int currentCol = currentPosition[1];
+        int[] nextPosition = new int[2];
+
+        //Agregar switch N, S para mover adelante
+        switch (side) {
+            case 'N' -> {
+                if (normalizeBoard[currentRow][currentCol + 2] == ' ') {
+                    System.out.println("Single Step");
+                    //Single step
+                    nextPosition[0] = currentRow;
+                    nextPosition[1] = currentCol + 2;
+                }
+            }
+            case 'S' -> {
+                if (normalizeBoard[currentRow][currentCol - 2] == ' ') {
+                    System.out.println("Single Step");
+                    //Single step
+                    nextPosition[0] = currentRow;
+                    nextPosition[1] = currentCol - 2;
+                }
+            }
+            default -> {
+                System.out.println("ERROR IN moveForward CLASS Pawn.");
+            }
+        }
+        return nextPosition;
+    }
+
+    private static int[] moveDiagonal(char[][] normalizeBoard, int[] currentPosition, char side) {
+        int row = currentPosition[0];
+        int col = currentPosition[1];
+        int[] nextPosition = new int[2];
+
+        //Move for N
+        switch (side) {
+            case 'N' -> {
+                if ((row + 1) < 17) { //Check move forward is inside the board
+                    if ((col + 1) < 17 && normalizeBoard[row + 1][col + 1] == ' ' //Check diagonal col is inside the board and there isn´t a wall 
+                            && normalizeBoard[row + 2][col + 2] == ' ') {    //Check next position is empty
+                        System.out.println("MOVE DIAGONAL DERECHA N");
+                        nextPosition[0] = row + 2;
+                        nextPosition[1] = col + 2;
+                    } else if ((col - 1) > 0 && normalizeBoard[row + 1][col - 1] == ' ' //Check there isn´t a wall and is inside the board
+                            && normalizeBoard[row + 2][col - 2] == ' ') {    //Check next position is empty
+                        System.out.println("MOVE DIAGONAL IZQUIERDA N");
+                        nextPosition[0] = row + 2;
+                        nextPosition[1] = col - 2;
+                    }
+                }
+            }
+            case 'S' -> {
+                if ((row - 1) >= 0) {
+                    if ((col - 1) >= 0 && normalizeBoard[row - 1][col - 1] == ' ' //Check there isn´t a wall and is inside the board
+                            && normalizeBoard[row - 2][col - 2] == ' ') {    //Check next position is empty
+                        System.out.println("MOVE DIAGONAL IZQUIERDA S");
+                        nextPosition[0] = row - 2;
+                        nextPosition[1] = col - 2;
+                    }
+                }
+            }
+            default -> {
+                System.out.println("ERROR IN METHOD moveDiagonal");
+            }
+        }
+        System.out.println("NEXT row move Diagonal " + nextPosition[0]);
+
+        return nextPosition;
     }
 }

@@ -22,8 +22,6 @@ public class Board {
             rowCol[0] = is row position
             rowCol[1] = is col position
          */
-        //int[] rowCol = new int[2];
-        // Name of pawn and concat number of pawn
         String nameNPawn = "Pawn N ";
         String nameSPawn = "Pawn S ";
 
@@ -69,13 +67,14 @@ public class Board {
         }
         System.out.println("  =================");
         System.out.println("  0 1 2 3 4 5 6 7 8");
+        
+        //Devolver json con respuesta de mover o poner pared
         String response = Pawn.movePawn(data, positionPawns, normalizeBoard);
 
-        //Devolver json con respuesta de mover o poner pared
         return response;
     }
 
-    public static char[][] armarTablero(char[] simpleBoard) {
+    private static char[][] armarTablero(char[] simpleBoard) {
         char[][] boardReady = new char[17][17];
         int count = 0;
 

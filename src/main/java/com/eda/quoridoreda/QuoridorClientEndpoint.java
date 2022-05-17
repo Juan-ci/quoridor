@@ -2,7 +2,6 @@ package com.eda.quoridoreda;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.java_websocket.client.WebSocketClient;
@@ -43,8 +42,7 @@ public class QuoridorClientEndpoint extends WebSocketClient {
                 String opponent = json.getJSONObject("data").getString("opponent");
                 if (("juan.ci.caballero@gmail.com").equals(opponent)) {
                     System.out.println("received: " + message);
-                    Challenge requestChallenge = new Challenge();
-                    JSONObject challengeResponse = requestChallenge.acceptChallenge(json);
+                    JSONObject challengeResponse = Challenge.acceptChallenge(json);
                     System.out.println("Respuesta " + challengeResponse);
                     System.out.println("Action " + challengeResponse.get("data"));
 
@@ -56,7 +54,7 @@ public class QuoridorClientEndpoint extends WebSocketClient {
                 //Envío el json tal cual lo recibo
                 String response = Board.showBoard(json);
                 System.out.println("MUESTRO la respuesta de movimiento" + response);
-                
+
                 send(response);
             }
             case "game_over" -> {
