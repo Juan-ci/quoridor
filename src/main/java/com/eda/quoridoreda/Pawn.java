@@ -12,11 +12,9 @@ public class Pawn {
 
         switch (namePawn) {
             case "N" -> {
-                System.out.println("Estoy en switch case N");
                 response = northPawn(data, positionPawns, normalizeBoard);
             }
             case "S" -> {
-                System.out.println("Estoy en switch case S");
                 response = southPawn(data, positionPawns, normalizeBoard);
             }
             default ->
@@ -32,8 +30,8 @@ public class Pawn {
         String turnToken = json.getString("turn_token");
         System.out.println("TURN TOKEN: " + turnToken);
         char side = json.getString("side").charAt(0);
-        int[] currentPositionPawnToMove;
-        int[] nextPosition;
+        int[] currentPositionPawnToMove = new int[2];
+        int[] nextPosition = new int[2];
 
         //Current position pawn 1, in normalized board 17x17
         int currentRow = 0;
@@ -51,26 +49,21 @@ public class Pawn {
         int[] pawnS2 = positionPawns.get("Pawn S 2");
         int[] pawnS3 = positionPawns.get("Pawn S 3");
 
-        System.out.println("Llamo choosePawnToMove N");
         currentPositionPawnToMove = choosePawnToMove(side, pawnN1, pawnN2, pawnN3);
         currentRow = currentPositionPawnToMove[0];
         currentCol = currentPositionPawnToMove[1];
 
-//        if (normalizeBoard[currentRow + 2][currentCol] == ' ') {
-//            nextRow = currentRow + 2;
-//            nextCol = currentCol;
-//        } else if (normalizeBoard[currentRow + 2][currentCol] == 'S' && normalizeBoard[currentRow + 4][currentCol] == ' ') {
-//            nextRow = currentRow + 4;
-//            nextCol = currentCol;
-//        }
-        System.out.println("Estoy por entrar if checkMoveForward");
         if (checkMoveForward(normalizeBoard, currentPositionPawnToMove, side)) {
-            System.out.println("Dentro if checkMoveForward");
             nextPosition = moveForward(normalizeBoard, currentPositionPawnToMove, side);
 
             nextRow = nextPosition[0];
             nextCol = nextPosition[1];
-        }   //add check right, left, backward y other*
+        } else if (checkMoveRight(normalizeBoard, currentPositionPawnToMove, side)) {
+            nextPosition = moveRight(normalizeBoard, currentPositionPawnToMove, side);
+
+            nextRow = nextPosition[0];
+            nextCol = nextPosition[1];
+        } //Add move Left
 
         currentRow /= 2;
         currentCol /= 2;
@@ -103,7 +96,8 @@ public class Pawn {
         String turnToken = json.getString("turn_token");
         JSONObject jsonResponse = new JSONObject();
         char side = json.getString("side").charAt(0);
-        int[] movePawn;
+        int[] currentPositionPawnToMove = new int[2];
+        int[] nextPosition = new int[2];
 
         //Current position pawn 1
         int currentRow = 0;
@@ -122,18 +116,22 @@ public class Pawn {
         int[] pawnN2 = positionPawns.get("Pawn N 2");
         int[] pawnN3 = positionPawns.get("Pawn N 3");
 
-        System.out.println("Llamo choosePawnToMove N");
-        movePawn = choosePawnToMove(side, pawnS1, pawnS2, pawnS3);
-        currentRow = movePawn[0];
-        currentCol = movePawn[1];
+        currentPositionPawnToMove = choosePawnToMove(side, pawnS1, pawnS2, pawnS3);
+        currentRow = currentPositionPawnToMove[0];
+        currentCol = currentPositionPawnToMove[1];
 
-//        if (normalizeBoard[currentRow - 1][currentCol] == ' ') {
-//            nextRow = currentRow - 1;
-//            nextCol = currentCol;
-//        } else if (normalizeBoard[currentRow - 1][currentCol] == 'N' && normalizeBoard[currentRow - 2][currentCol] == ' ') {
-//            nextRow = currentRow - 2;
-//            nextCol = currentCol;
-//        }
+        if (checkMoveForward(normalizeBoard, currentPositionPawnToMove, side)) {
+            nextPosition = moveForward(normalizeBoard, currentPositionPawnToMove, side);
+
+            nextRow = nextPosition[0];
+            nextCol = nextPosition[1];
+        } else if (checkMoveRight(normalizeBoard, currentPositionPawnToMove, side)) {
+            nextPosition = moveRight(normalizeBoard, currentPositionPawnToMove, side);
+
+            nextRow = nextPosition[0];
+            nextCol = nextPosition[1];
+        } //Add move Left
+
         currentRow /= 2;
         currentCol /= 2;
         nextRow /= 2;
@@ -190,13 +188,17 @@ public class Pawn {
         int currentCol = currentPosition[1];
         boolean moveAllowed = false;
 
+        System.out.println("Checking move forward...");
         switch (pawn) {
             case 'N' -> {
+                if (normalizeBoard[currentRow + 2][currentCol] == 'S' && (currentRow + 2) == 16) {
+                    return moveAllowed;
+                }
                 for (int i = currentRow + 1; i < 17; i++) {
                     if (normalizeBoard[i][currentCol] == '-') { //Check wall
                         return moveAllowed;
                     }
-                    if (i < 12 && normalizeBoard[i + 1][currentCol] == 'S' //Check enemie
+                    if (i < 13 && normalizeBoard[i + 1][currentCol] == 'S' //Check enemie
                             && normalizeBoard[i + 2][currentCol] == ' ' //Check there isn´t a wall
                             && normalizeBoard[i + 3][currentCol] == ' ') {
                         moveAllowed = true;
@@ -205,13 +207,16 @@ public class Pawn {
                 }
             }
             case 'S' -> {
-                for (int i = currentRow - 1; i < 17; i--) {
+                if (normalizeBoard[currentRow - 2][currentCol] == 'N' && (currentRow - 2) == 0) {
+                    return moveAllowed;
+                }
+                for (int i = currentRow - 1; i > 0; i--) {
                     if (normalizeBoard[i][currentCol] == '-') {
                         return moveAllowed;
                     }
-                    if ( i > 4 && normalizeBoard[i - 1][currentCol] == 'N' //Check enemie
+                    if (i > 4 && normalizeBoard[i - 1][currentCol] == 'N' //Check enemie
                             && normalizeBoard[i - 2][currentCol] == ' ' //Check there isn´t a wall
-                            && normalizeBoard[i - 3][currentCol] == ' ') {  
+                            && normalizeBoard[i - 3][currentCol] == ' ') {
                         moveAllowed = true;
                         return moveAllowed;
                     }
@@ -227,75 +232,38 @@ public class Pawn {
         return moveAllowed;
     }
 
-    private static boolean checkMoveRight(char[][] normalizeBoard, int[] currentPosition, char pawn) {
+    private static boolean checkMoveRight(char[][] normalizeBoard, int[] currentPosition, char side) {
         int currentRow = currentPosition[0];
         int currentCol = currentPosition[1];
         boolean moveAllowed = false;
 
-        switch (pawn) {
+        System.out.println("Checking move right...");
+        switch (side) {
             case 'N': {
                 //check 1 step right, if is empty then check 1 step forward
+                if (currentCol == 16) {
+                    return moveAllowed;
+                }
                 for (int j = currentCol + 1; j < 17; j++) {
-                    if (normalizeBoard[currentRow][j] == ' ' && j < 16) {            //Check if there isn´t a wall
+                    if (normalizeBoard[currentRow][j] == ' ' && j < 17) {            //Check if there isn´t a wall
                         if (normalizeBoard[currentRow][j + 1] == ' ' //Check if there isn´t a pawn enemie
                                 && normalizeBoard[currentRow + 1][j + 1] == ' ') {  //Check if there isn´t also a wall forward
-                            if (normalizeBoard[currentRow + 2][j + 1] == ' ') {
-                                moveAllowed = true;
-                                return moveAllowed;
-                            } else if (normalizeBoard[currentRow + 2][j + 1] == 'S' //Check if there is a pawn opponent
-                                    && normalizeBoard[currentRow + 3][j + 1] == ' ' //Check if there isn´t a wall
-                                    && normalizeBoard[currentRow + 4][j + 1] == ' ' //Check if is empty
-                                    && currentRow < 14) {                               //Check currentRow is inside de board
-                                moveAllowed = true;
-                                return moveAllowed;
-                            }
-                        } else if (currentRow < 13 && j < 14 //Check is inside still inside the board
-                                && normalizeBoard[currentRow][j + 1] == 'S' //Check if there is enemie
-                                && normalizeBoard[currentRow][j + 2] == ' ' //Check there isn´t a wall
-                                && normalizeBoard[currentRow][j + 3] == ' ' //Check if there isn´t enemie
-                                && normalizeBoard[currentRow + 1][j + 3] == ' ') {  //Check there isn´t a wall
-                            if (normalizeBoard[currentRow + 2][j + 3] == ' ') {
-                                moveAllowed = true;
-                                return moveAllowed;
-                            } else if (normalizeBoard[currentRow + 2][j + 3] == 'S' //Check if there is enemie
-                                    && normalizeBoard[currentRow + 3][j + 3] == ' ' //Check there isn´t a wall
-                                    && normalizeBoard[currentRow + 4][j + 3] == ' ') {  //Check if there isn´t enemie
-                                moveAllowed = true;
-                                return moveAllowed;
-                            }
+                            moveAllowed = true;
+                            return moveAllowed;
                         }
                     }
                 }
             }
             case 'S': {
+                if (currentCol == 16) {
+                    return moveAllowed;
+                }
                 for (int j = currentCol + 1; j < 17; j++) {
                     if (normalizeBoard[currentRow][j] == ' ' && j < 16) {            //Check if there isn´t a wall
                         if (normalizeBoard[currentRow][j + 1] == ' ' //Check if there isn´t a pawn enemie
-                                && normalizeBoard[currentRow - 1][j + 1] == ' ') {  //Check if there isn´t also a wall forward
-                            if (normalizeBoard[currentRow - 2][j + 1] == ' ') {
-                                moveAllowed = true;
-                                return moveAllowed;
-                            } else if (normalizeBoard[currentRow - 2][j + 1] == 'S' //Check if there is a pawn opponent
-                                    && normalizeBoard[currentRow - 3][j + 1] == ' ' //Check if there isn´t a wall
-                                    && normalizeBoard[currentRow - 4][j + 1] == ' ' //Check if is empty
-                                    && currentRow > 3) {                               //Check currentRow is inside de board
-                                moveAllowed = true;
-                                return moveAllowed;
-                            }
-                        } else if (currentRow > 4 && j < 14 //Check is inside still inside the board
-                                && normalizeBoard[currentRow][j + 1] == 'S' //Check if there is enemie
-                                && normalizeBoard[currentRow][j + 2] == ' ' //Check there isn´t a wall
-                                && normalizeBoard[currentRow][j + 3] == ' ' //Check if there isn´t enemie
-                                && normalizeBoard[currentRow + 1][j + 3] == ' ') {  //Check there isn´t a wall
-                            if (normalizeBoard[currentRow - 2][j + 3] == ' ') {
-                                moveAllowed = true;
-                                return moveAllowed;
-                            } else if (normalizeBoard[currentRow - 2][j + 3] == 'S' //Check if there is enemie
-                                    && normalizeBoard[currentRow - 3][j + 3] == ' ' //Check there isn´t a wall
-                                    && normalizeBoard[currentRow - 4][j + 3] == ' ') {  //Check if there isn´t enemie
-                                moveAllowed = true;
-                                return moveAllowed;
-                            }
+                                && normalizeBoard[currentRow - 1][j + 1] == ' ') {  //Check if there isn´t also a wall forward to next move
+                            moveAllowed = true;
+                            return moveAllowed;
                         }
                     }
                 }
@@ -304,7 +272,7 @@ public class Pawn {
                 System.out.println("ERROR IN CLASS Pawn METHOD checkMoveRight.");
             }
         }
-        return false;
+        return moveAllowed;
     }
 
     //Move
@@ -315,17 +283,115 @@ public class Pawn {
         int[] nextPosition = new int[2];
 
         //Agregar switch N, S para mover adelante
-        if (normalizeBoard[currentRow + 2][currentCol] == ' ') {
-            System.out.println("Single Step");
-            //Single step
-            nextPosition[0] = currentRow + 2;
-            nextPosition[1] = currentCol;
-        } else if (normalizeBoard[currentRow + 2][currentCol] == 'S') {
-            System.out.println("Step to jump");
-            //Next position to jump
-            nextPosition[0] = currentRow + 4;
-            nextPosition[1] = currentCol;
+        switch (side) {
+            case 'N' -> {
+                if (normalizeBoard[currentRow + 2][currentCol] == ' ') {
+                    System.out.println("Single Step");
+                    //Single step
+                    nextPosition[0] = currentRow + 2;
+                    nextPosition[1] = currentCol;
+                }
+                if (normalizeBoard[currentRow + 2][currentCol] == 'S') {
+                    if (currentRow + 4 < 17) {   //Check is inside the board
+                        System.out.println("Step to jump");
+                        //Next position to jump
+                        nextPosition[0] = currentRow + 4;
+                        nextPosition[1] = currentCol;
+                    }
+                }
+            }
+            case 'S' -> {
+                if (normalizeBoard[currentRow - 2][currentCol] == ' ') {
+                    System.out.println("Single Step");
+                    //Single step
+                    nextPosition[0] = currentRow - 2;
+                    nextPosition[1] = currentCol;
+                }
+                if (normalizeBoard[currentRow - 2][currentCol] == 'N') {
+                    if (currentRow - 4 > 0) {   //Check is inside the board
+                        System.out.println("Step to jump");
+                        //Next position to jump
+                        nextPosition[0] = currentRow - 4;
+                        nextPosition[1] = currentCol;
+                    }
+                }
+            }
+            default -> {
+                System.out.println("ERROR IN moveForward CLASS Pawn.");
+            }
         }
+        return nextPosition;
+    }
+
+    private static int[] moveRight(char[][] normalizeBoard, int[] currentPosition, char side) {
+        System.out.println("Move Right");
+        int currentRow = currentPosition[0];
+        int currentCol = currentPosition[1];
+        int[] nextPosition = new int[2];
+
+        //Agregar switch N, S para mover adelante
+        switch (side) {
+            case 'N' -> {
+                if (normalizeBoard[currentRow][currentCol + 2] == ' ') {
+                    System.out.println("Single Step");
+                    //Single step
+                    nextPosition[0] = currentRow;
+                    nextPosition[1] = currentCol + 2;
+                }
+            }
+            case 'S' -> {
+                if (normalizeBoard[currentRow][currentCol - 2] == ' ') {
+                    System.out.println("Single Step");
+                    //Single step
+                    nextPosition[0] = currentRow;
+                    nextPosition[1] = currentCol - 2;
+                }
+            }
+            default -> {
+                System.out.println("ERROR IN moveForward CLASS Pawn.");
+            }
+        }
+        return nextPosition;
+    }
+
+    private static int[] moveDiagonal(char[][] normalizeBoard, int[] currentPosition, char side) {
+        int row = currentPosition[0];
+        int col = currentPosition[1];
+        int[] nextPosition = new int[2];
+
+        //Move for N
+        switch (side) {
+            case 'N' -> {
+                if ((row + 1) < 17) { //Check move forward is inside the board
+                    if ((col + 1) < 17 && normalizeBoard[row + 1][col + 1] == ' ' //Check diagonal col is inside the board and there isn´t a wall 
+                            && normalizeBoard[row + 2][col + 2] == ' ') {    //Check next position is empty
+                        System.out.println("MOVE DIAGONAL DERECHA N");
+                        nextPosition[0] = row + 2;
+                        nextPosition[1] = col + 2;
+                    } else if ((col - 1) > 0 && normalizeBoard[row + 1][col - 1] == ' ' //Check there isn´t a wall and is inside the board
+                            && normalizeBoard[row + 2][col - 2] == ' ') {    //Check next position is empty
+                        System.out.println("MOVE DIAGONAL IZQUIERDA N");
+                        nextPosition[0] = row + 2;
+                        nextPosition[1] = col - 2;
+                    }
+                }
+            }
+            case 'S' -> {
+                if ((row - 1) >= 0) {
+                    if ((col - 1) >= 0 && normalizeBoard[row - 1][col - 1] == ' ' //Check there isn´t a wall and is inside the board
+                            && normalizeBoard[row - 2][col - 2] == ' ') {    //Check next position is empty
+                        System.out.println("MOVE DIAGONAL IZQUIERDA S");
+                        nextPosition[0] = row - 2;
+                        nextPosition[1] = col - 2;
+                    }
+                }
+            }
+            default -> {
+                System.out.println("ERROR IN METHOD moveDiagonal");
+            }
+        }
+        System.out.println("NEXT row move Diagonal " + nextPosition[0]);
+
         return nextPosition;
     }
 }

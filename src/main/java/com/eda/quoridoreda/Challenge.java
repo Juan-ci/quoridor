@@ -4,9 +4,9 @@ import org.json.JSONObject;
 
 public class Challenge {
     
-    private String challengeId;
+    private static String challengeId;
     
-    private final String action = "accept_challenge";
+    private static final String action = "accept_challenge";
     
     public Challenge() {
         
@@ -28,7 +28,7 @@ public class Challenge {
                         }
             }
     */
-    public JSONObject acceptChallenge(JSONObject request) {
+    public static JSONObject acceptChallenge(JSONObject request) {
         challengeId = request.getJSONObject("data").getString("challenge_id");
         
         JSONObject response = new JSONObject();

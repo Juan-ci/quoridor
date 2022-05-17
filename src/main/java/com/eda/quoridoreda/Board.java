@@ -67,9 +67,10 @@ public class Board {
         }
         System.out.println("  =================");
         System.out.println("  0 1 2 3 4 5 6 7 8");
+        
+        //Devolver json con respuesta de mover o poner pared
         String response = Pawn.movePawn(data, positionPawns, normalizeBoard);
 
-        //Devolver json con respuesta de mover o poner pared
         return response;
     }
 
