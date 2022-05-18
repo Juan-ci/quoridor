@@ -17,6 +17,7 @@ public class Board {
 
         char[] board = data.getString("board").toCharArray();
         String gameId = data.getString("game_id");
+        String side = data.getString("side");
 
         /*
             rowCol[0] = is row position
@@ -36,6 +37,7 @@ public class Board {
         char[][] normalizeBoard = armarTablero(board);
 
         System.out.println("GAME ID: " + gameId);
+        System.out.println("SIDE: " + side);
         System.out.println("TURNO N°: " + totalTurn);
 
         System.out.println("  0 1 2 3 4 5 6 7 8");
