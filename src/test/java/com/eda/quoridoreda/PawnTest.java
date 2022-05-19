@@ -1,12 +1,9 @@
 package com.eda.quoridoreda;
 
-import mockit.MockUp;
-import mockit.Mock;
-import org.junit.Assert;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-public class CheckingTest {
+public class PawnTest {
     
     private int[] pawn1 = new int[2];
     private int[] pawn2 = new int[2];
@@ -19,8 +16,8 @@ public class CheckingTest {
         pawn2[0] = 2;
         pawn2[1] = 8;
         pawn3[0] = 0;
-        pawn3[1] = 16;
+        pawn3[1] = 14;
         
-        assertArrayEquals(Checking.choosePawnToMove('N', pawn1, pawn2, pawn3), pawn2);
+        assertArrayEquals(Pawn.choosePawnToMove('N', pawn1, pawn2, pawn3), pawn2);
     }
 }
