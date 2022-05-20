@@ -76,7 +76,7 @@ public class Board {
         return response;
     }
 
-    private static char[][] armarTablero(char[] simpleBoard) {
+    public static char[][] armarTablero(char[] simpleBoard) {
         char[][] boardReady = new char[17][17];
         int count = 0;
 

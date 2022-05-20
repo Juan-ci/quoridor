@@ -33,6 +33,7 @@ public class Pawn {
         char side = json.getString("side").charAt(0);
         int[] currentPositionPawnToMove = new int[2];
         int[] nextPosition = new int[2];
+        String response = null;
 
         //Current position pawn 1, in normalized board 17x17
         int currentRow = 0;
@@ -50,48 +51,55 @@ public class Pawn {
         int[] pawnS2 = positionPawns.get("Pawn S 2");
         int[] pawnS3 = positionPawns.get("Pawn S 3");
 
-        currentPositionPawnToMove = choosePawnToMove(side, pawnN1, pawnN2, pawnN3);
-        currentRow = currentPositionPawnToMove[0];
-        currentCol = currentPositionPawnToMove[1];
+        int[] pawnEnemiePosition = Checking.checkPositionPawnEnemie(side, pawnS1, pawnS2, pawnS3);
 
-        if (Checking.checkMoveForward(normalizeBoard, currentPositionPawnToMove, side)) {
-            nextPosition = Move.moveForward(normalizeBoard, currentPositionPawnToMove, side);
+        if (pawnEnemiePosition[0] == 10) {  //Agregar check de wall
+            System.out.println("ENTRO IF PUT WALL");
+            response = Wall.putWall(side, pawnEnemiePosition, gameId, turnToken);
+        } else {
+            currentPositionPawnToMove = choosePawnToMove(side, pawnN1, pawnN2, pawnN3);
+            currentRow = currentPositionPawnToMove[0];
+            currentCol = currentPositionPawnToMove[1];
 
-            nextRow = nextPosition[0];
-            nextCol = nextPosition[1];
-        } else if (Checking.checkMoveLeft(normalizeBoard, currentPositionPawnToMove, side)) {
-            nextPosition = Move.moveLeft(normalizeBoard, currentPositionPawnToMove, side);
+            if (Checking.checkMoveForward(normalizeBoard, currentPositionPawnToMove, side)) {
+                nextPosition = Move.moveForward(normalizeBoard, currentPositionPawnToMove, side);
 
-            nextRow = nextPosition[0];
-            nextCol = nextPosition[1];
-        } else if (Checking.checkMoveRight(normalizeBoard, currentPositionPawnToMove, side)) {
-            nextPosition = Move.moveRight(normalizeBoard, currentPositionPawnToMove, side);
+                nextRow = nextPosition[0];
+                nextCol = nextPosition[1];
+            } else if (Checking.checkMoveLeft(normalizeBoard, currentPositionPawnToMove, side)) {
+                nextPosition = Move.moveLeft(normalizeBoard, currentPositionPawnToMove, side);
 
-            nextRow = nextPosition[0];
-            nextCol = nextPosition[1];
+                nextRow = nextPosition[0];
+                nextCol = nextPosition[1];
+            } else if (Checking.checkMoveRight(normalizeBoard, currentPositionPawnToMove, side)) {
+                nextPosition = Move.moveRight(normalizeBoard, currentPositionPawnToMove, side);
+
+                nextRow = nextPosition[0];
+                nextCol = nextPosition[1];
+            }
+
+            currentRow /= 2;
+            currentCol /= 2;
+            nextRow /= 2;
+            nextCol /= 2;
+
+            System.out.println("NextRow " + nextRow + " NextCol " + nextCol);
+            //Armando json object 'data'
+            JSONObject data = new JSONObject();
+            data.put("to_col", nextCol);
+            data.put("turn_token", turnToken);
+            data.put("game_id", gameId);
+            data.put("to_row", nextRow);
+            data.put("from_col", currentCol);
+            data.put("from_row", currentRow);
+
+            //Armando json de respuesta de movimiento
+            JSONObject jsonResponse = new JSONObject();
+            jsonResponse.put("action", "move");
+            jsonResponse.put("data", data);
+
+            response = jsonResponse.toString();
         }
-
-        currentRow /= 2;
-        currentCol /= 2;
-        nextRow /= 2;
-        nextCol /= 2;
-
-        System.out.println("NextRow " + nextRow + " NextCol " + nextCol);
-        //Armando json object 'data'
-        JSONObject data = new JSONObject();
-        data.put("to_col", nextCol);
-        data.put("turn_token", turnToken);
-        data.put("game_id", gameId);
-        data.put("to_row", nextRow);
-        data.put("from_col", currentCol);
-        data.put("from_row", currentRow);
-
-        //Armando json de respuesta de movimiento
-        JSONObject jsonResponse = new JSONObject();
-        jsonResponse.put("action", "move");
-        jsonResponse.put("data", data);
-
-        String response = jsonResponse.toString();
 
         return response;
     }
