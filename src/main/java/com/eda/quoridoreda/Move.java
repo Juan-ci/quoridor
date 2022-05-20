@@ -11,6 +11,13 @@ public class Move {
         //Agregar switch N, S para mover adelante
         switch (side) {
             case 'N' -> {
+                
+                if (normalizeBoard[currentRow + 1][currentCol] == ' ') {
+                    System.out.println("Single Step");
+                    //Single step
+                    nextPosition[0] = currentRow + 2;
+                    nextPosition[1] = currentCol;
+                }
                 if (normalizeBoard[currentRow + 2][currentCol] == ' ') {
                     System.out.println("Single Step");
                     //Single step

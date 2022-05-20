@@ -1,6 +1,8 @@
 com\eda\quoridoreda\PruebasJson.class
 com\eda\quoridoreda\QuoridorClientEndpoint.class
+com\eda\quoridoreda\Wall.class
 com\eda\quoridoreda\Challenge.class
 com\eda\quoridoreda\Checking.class
+com\eda\quoridoreda\Move.class
 com\eda\quoridoreda\Board.class
 com\eda\quoridoreda\Pawn.class
