@@ -51,4 +51,26 @@ public class CheckingTest {
         assertTrue(Checking.checkMoveLeft(normalized, currentPositionN, 'N'));
         assertTrue(Checking.checkMoveLeft(normalized, currentPositionS, 'S'));
     }
+    
+    @Test
+    public void shouldReturnFalseCheckMoveRight() {
+        board = "N   N         N S                                                                                                                                                  -*-              S                                                                                                           S".toCharArray();
+        normalized = Board.armarTablero(board);
+        int[] currentPositionN = new int[]{0, 14};
+        int[] currentPositionS = new int[]{16, 16};
+        
+        assertFalse(Checking.checkMoveRight(normalized, currentPositionN, 'N'));
+        assertFalse(Checking.checkMoveRight(normalized, currentPositionS, 'S'));
+    }
+        
+//    @Test
+//    public void shouldReturnTrueCheckMoveRight() {
+//        board = "  N     N     N                                                                                                                                                                                                                                                                   S     S     S  ".toCharArray();
+//        normalized = Board.armarTablero(board);
+//        int[] currentPositionN = new int[]{0, 2};
+//        int[] currentPositionS = new int[]{16, 8};
+//        
+//        assertTrue(Checking.checkMoveRight(normalized, currentPositionN, 'N'));
+//        assertTrue(Checking.checkMoveRight(normalized, currentPositionS, 'S'));
+//    }
 }
