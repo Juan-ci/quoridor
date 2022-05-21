@@ -160,9 +160,9 @@ public class Checking {
                 }
             }
             case 'S' -> {
-                if (pawn1[0] < pawn2[0] && pawn1[0] < pawn3[0]) {   //Verifica cual está más adelantado
+                if (pawn1[0] > pawn2[0] && pawn1[0] > pawn3[0]) {   //Verifica cual está más adelantado
                     return pawn1;
-                } else if (pawn2[0] < pawn3[0] && pawn2[0] < pawn1[0]) {
+                } else if (pawn2[0] > pawn3[0] && pawn2[0] > pawn1[0]) {
                     return pawn2;
                 } else {
                     return pawn3;
