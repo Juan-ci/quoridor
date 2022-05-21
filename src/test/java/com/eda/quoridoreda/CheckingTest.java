@@ -59,18 +59,21 @@ public class CheckingTest {
         int[] currentPositionN = new int[]{0, 14};
         int[] currentPositionS = new int[]{16, 16};
         
+        //Testing that could not jump an enemie if it is in a border spot
         assertFalse(Checking.checkMoveRight(normalized, currentPositionN, 'N'));
+        
+        //Testing that could not move right if it is in the right border
         assertFalse(Checking.checkMoveRight(normalized, currentPositionS, 'S'));
     }
         
-//    @Test
-//    public void shouldReturnTrueCheckMoveRight() {
-//        board = "  N     N     N                                                                                                                                                                                                                                                                   S     S     S  ".toCharArray();
-//        normalized = Board.armarTablero(board);
-//        int[] currentPositionN = new int[]{0, 2};
-//        int[] currentPositionS = new int[]{16, 8};
-//        
-//        assertTrue(Checking.checkMoveRight(normalized, currentPositionN, 'N'));
-//        assertTrue(Checking.checkMoveRight(normalized, currentPositionS, 'S'));
-//    }
+    @Test
+    public void shouldReturnTrueCheckMoveRight() {
+        board = "  N     N S                                                                                                                                                                                                                                                                       S     S N      ".toCharArray();
+        normalized = Board.armarTablero(board);
+        int[] currentPositionN = new int[]{0, 8};
+        int[] currentPositionS = new int[]{16, 8};
+        
+        assertTrue(Checking.checkMoveRight(normalized, currentPositionN, 'N'));
+        assertTrue(Checking.checkMoveRight(normalized, currentPositionS, 'S'));
+    }
 }
