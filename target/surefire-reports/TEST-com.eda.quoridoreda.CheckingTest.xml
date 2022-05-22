@@ -57,8 +57,8 @@
     <property name="sun.cpu.endian" value="little"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="com.eda.quoridoreda.CheckingTest" name="shouldReturnFalseCheckMoveRight" time="0.008"/>
-  <testcase classname="com.eda.quoridoreda.CheckingTest" name="shouldReturnTrueCheckMoveLeft" time="0"/>
+  <testcase classname="com.eda.quoridoreda.CheckingTest" name="shouldReturnFalseCheckMoveRight" time="0.007"/>
+  <testcase classname="com.eda.quoridoreda.CheckingTest" name="shouldReturnTrueCheckMoveLeft" time="0.001"/>
   <testcase classname="com.eda.quoridoreda.CheckingTest" name="shouldReturnTrueCheckMoveForward" time="0"/>
   <testcase classname="com.eda.quoridoreda.CheckingTest" name="shouldReturnPawn3" time="0.002"/>
   <testcase classname="com.eda.quoridoreda.CheckingTest" name="shouldReturnTrueCheckMoveRight" time="0"/>
