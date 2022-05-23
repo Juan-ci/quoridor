@@ -60,8 +60,8 @@ public class Checking {
         switch (side) {
             case 'N': {
                 if (currentCol == 16
-                        || (currentCol == 14 && currentRow == 14
-                        && normalizeBoard[currentRow + 2][currentCol + 2] == 'S')) {
+                        || (currentCol == 14
+                        && normalizeBoard[currentRow][currentCol + 2] == 'S')) {
                     return moveAllowed;
                 }
                 for (int j = currentCol + 1; j < 17; j++) {

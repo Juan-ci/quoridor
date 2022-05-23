@@ -28,7 +28,7 @@ public class Challenge {
                         }
             }
     */
-    public static JSONObject acceptChallenge(JSONObject request) {
+    public static String acceptChallenge(JSONObject request) {
         challengeId = request.getJSONObject("data").getString("challenge_id");
         
         JSONObject response = new JSONObject();
@@ -37,6 +37,6 @@ public class Challenge {
         response.put("action", action);
         response.put("data", data);
         
-        return response;
+        return response.toString();
     }
 }
