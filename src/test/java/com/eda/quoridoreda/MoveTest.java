@@ -53,7 +53,6 @@ public class MoveTest {
         assertArrayEquals(expNResult, resultN);
         assertArrayEquals(expSResult, resultS);
     
-        
         //ADD CHECK AND TEST FOR JUMP TO RIGHT
     }
     
@@ -74,7 +73,6 @@ public class MoveTest {
         assertArrayEquals(expNResult, resultN);
         assertArrayEquals(expSResult, resultS);
     
-        
         //ADD CHECK AND TEST FOR JUMP TO LEFT
     }
 }
