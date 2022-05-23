@@ -41,7 +41,7 @@ public class Move {
                     nextPosition[1] = currentCol;
                 }
                 if (normalizeBoard[currentRow - 2][currentCol] == 'N') {
-                    if (currentRow - 4 > 0) {   //Check is inside the board
+                    if (currentRow - 4 >= 0) {   //Check is inside the board
                         System.out.println("Step to jump");
                         //Next position to jump
                         nextPosition[0] = currentRow - 4;
