@@ -42,11 +42,11 @@ public class QuoridorClientEndpoint extends WebSocketClient {
                 String opponent = json.getJSONObject("data").getString("opponent");
                 if (("juan.ci.caballero@gmail.com").equals(opponent)) {
                     System.out.println("received: " + message);
-                    JSONObject challengeResponse = Challenge.acceptChallenge(json);
+                    String challengeResponse = Challenge.acceptChallenge(json);
                     System.out.println("Respuesta " + challengeResponse);
-                    System.out.println("Action " + challengeResponse.get("data"));
+                    //System.out.println("Action " + challengeResponse.get("data"));
 
-                    send(challengeResponse.toString());
+                    send(challengeResponse);
                 }
             }
             case "your_turn" -> {
