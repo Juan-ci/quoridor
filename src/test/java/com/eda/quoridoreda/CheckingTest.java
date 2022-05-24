@@ -78,7 +78,7 @@ public class CheckingTest {
     }
     
     @Test
-    public void shouldReturnFourCheckQuantityMoveRight() {
+    public void shouldReturnTwoCheckQuantityMoveRight() {
         board = "  N     N                -*-                                                                                                                                                                                                                                     -*-              S     S   N   S".toCharArray();
         normalized = Board.armarTablero(board);
         int[] currentPositionN = new int[]{0, 8};
@@ -86,6 +86,17 @@ public class CheckingTest {
         
         assertEquals( 2, Checking.checkQuantityMoveToRight(normalized, currentPositionN, 'N'));
         assertEquals( 2, Checking.checkQuantityMoveToRight(normalized, currentPositionS, 'S'));
+    }
+    
+    @Test
+    public void shouldReturnTwoCheckQuantityMoveLeft() {
+        board = "  N         N              -*-                                                                                                                                                                                                                                       -*-        S       S   N   S".toCharArray();
+        normalized = Board.armarTablero(board);
+        int[] currentPositionN = new int[]{0, 12};
+        int[] currentPositionS = new int[]{16, 8};
+        
+        assertEquals( 2, Checking.checkQuantityMoveToLeft(normalized, currentPositionN, 'N'));
+        assertEquals( 2, Checking.checkQuantityMoveToLeft(normalized, currentPositionS, 'S'));
     }
     
     @Test
