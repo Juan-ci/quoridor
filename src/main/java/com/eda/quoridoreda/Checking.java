@@ -18,10 +18,13 @@ public class Checking {
                 }
                 for (int i = currentRow + 1; i < 17; i++) {
                     if (i < 13 && normalizeBoard[i + 1][currentCol] == 'S' //Check enemie
-                            && normalizeBoard[i + 2][currentCol] == ' ' //Check there isn´t a wall
-                            && normalizeBoard[i + 3][currentCol] == ' ') {
-                        moveAllowed = true;
-                        return moveAllowed;
+                            && normalizeBoard[i + 2][currentCol] == ' ') {  //Check there isn´t a wall
+                        if (normalizeBoard[i + 3][currentCol] == ' ') {
+                            moveAllowed = true;
+                            return moveAllowed;
+                        } else {
+                            return moveAllowed;
+                        }
                     }
                 }
             }
@@ -34,10 +37,13 @@ public class Checking {
                 }
                 for (int i = currentRow - 1; i > 0; i--) {
                     if (i > 4 && normalizeBoard[i - 1][currentCol] == 'N' //Check enemie
-                            && normalizeBoard[i - 2][currentCol] == ' ' //Check there isn´t a wall
-                            && normalizeBoard[i - 3][currentCol] == ' ') {
-                        moveAllowed = true;
-                        return moveAllowed;
+                            && normalizeBoard[i - 2][currentCol] == ' ') { //Check there isn´t a wall
+                        if (normalizeBoard[i - 3][currentCol] == ' ') {
+                            moveAllowed = true;
+                            return moveAllowed;
+                        } else {
+                            return moveAllowed;
+                        }
                     }
                 }
             }
