@@ -100,7 +100,7 @@ public class Checking {
     public static int checkQuantityMoveToRight(char[][] normalizeBoard, int[] currentPosition, char side) {
         int currentRow = currentPosition[0];
         int currentCol = currentPosition[1];
-        int moveAllowed = 17;
+        int quantityMoves = 17;
 
         System.out.println("Checking quantity move right...");
         switch (side) {
@@ -108,17 +108,17 @@ public class Checking {
                 if (currentCol == 16
                         || (currentCol == 14
                         && normalizeBoard[currentRow][currentCol + 2] == 'S')) {
-                    return moveAllowed;
+                    return quantityMoves;
                 }
-                moveAllowed = 0;
+                quantityMoves = 0;
                 for (int j = currentCol + 1; j < 17; j++) {
                     if (normalizeBoard[currentRow][j] == ' ' && j < 17) {            //Check if there isn´t a wall
                         if (normalizeBoard[currentRow][j + 1] == ' ' //Check if there isn´t a pawn enemie
                                 && normalizeBoard[currentRow + 1][j + 1] == ' ') {  //Check if there isn´t also a wall forward
-                            moveAllowed++;
-                            return moveAllowed;
+                            quantityMoves++;
+                            return quantityMoves;
                         } else {
-                            moveAllowed++;
+                            quantityMoves++;
                         }
                     }
                 }
@@ -127,17 +127,17 @@ public class Checking {
                 if (currentCol == 16
                         || (currentCol == 14 && currentRow == 2
                         && normalizeBoard[currentRow - 2][currentCol + 2] == 'N')) {
-                    return moveAllowed;
+                    return quantityMoves;
                 }
-                moveAllowed = 0;
+                quantityMoves = 0;
                 for (int j = currentCol + 1; j < 17; j++) {
                     if (normalizeBoard[currentRow][j] == ' ' && j < 16) {            //Check if there isn´t a wall
                         if (normalizeBoard[currentRow][j + 1] == ' ' //Check if there isn´t a pawn enemie
                                 && normalizeBoard[currentRow - 1][j + 1] == ' ') {  //Check if there isn´t also a wall forward to next move
-                            moveAllowed++;
-                            return moveAllowed;
+                            quantityMoves++;
+                            return quantityMoves;
                         } else {
-                            moveAllowed++;
+                            quantityMoves++;
                         }
                     }
                 }
@@ -146,7 +146,7 @@ public class Checking {
                 System.out.println("ERROR IN CLASS Pawn METHOD checkMoveRight.");
             }
         }
-        return moveAllowed;
+        return quantityMoves;
     }
     
     public static boolean checkMoveLeftOneStep(char[][] normalizeBoard, int[] currentPosition, char side) {

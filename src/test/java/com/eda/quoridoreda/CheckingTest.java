@@ -97,7 +97,8 @@ public class CheckingTest {
         int[] pawnN2 = new int[]{4, 2};
         int[] pawnN3 = new int[]{10, 6};
         
-        assertArrayEquals(Checking.checkPositionPawnEnemie('N', pawnS1, pawnS2, pawnS3), pawnS3);
-        assertArrayEquals(Checking.checkPositionPawnEnemie('S', pawnN1, pawnN2, pawnN3), pawnN3);
+        //assertArrayEquals(Checking.checkPositionPawnEnemie('N', pawnS1, pawnS2, pawnS3), pawnS3);
+        assertArrayEquals( pawnS3,Checking.checkPositionPawnEnemie('N', pawnS1, pawnS2, pawnS3));
+        assertArrayEquals( pawnN3, Checking.checkPositionPawnEnemie('S', pawnN1, pawnN2, pawnN3));
     }
 }
