@@ -18,6 +18,6 @@ public class PawnTest {
         pawn3[0] = 0;
         pawn3[1] = 14;
         
-        assertArrayEquals(Pawn.choosePawnToMove('N', pawn1, pawn2, pawn3), pawn2);
+        assertArrayEquals( pawn2, Pawn.choosePawnToMove('N', pawn1, pawn2, pawn3));
     }
 }
