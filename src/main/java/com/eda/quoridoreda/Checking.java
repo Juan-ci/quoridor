@@ -154,6 +154,7 @@ public class Checking {
         int currentCol = currentPosition[1];
         boolean moveAllowed = false;
 
+        //  ADD POSIBILITY OF JUMPT TO LEFT!!!
         System.out.println("Checking move left...");
         switch (side) {
             case 'N': {

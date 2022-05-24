@@ -76,25 +76,22 @@ public class Pawn {
 
             nextRow = nextPosition[0];
             nextCol = nextPosition[1];
-        }
-        /*
-            else {
-                int movesToRight = Checking.checkMoveRight(normalizeBoard, currentPositionPawnToMove, side);
-                int movesToLeft = Checking.checkMoveRight(normalizeBoard, currentPositionPawnToMove, side);
-            
-                if(movesToRight <= movesToLeft) {
-                    nextPosition = Move.moveRight(normalizeBoard, currentPositionPawnToMove, side);
+        } else {
+            int movesToRight = Checking.checkQuantityMoveToRight(normalizeBoard, currentPositionPawnToMove, side);
+            int movesToLeft = Checking.checkQuantityMoveToLeft(normalizeBoard, currentPositionPawnToMove, side);
 
-                    nextRow = nextPosition[0];
-                    nextCol = nextPosition[1];
-                } else {
-                    nextPosition = Move.moveLeft(normalizeBoard, currentPositionPawnToMove, side);
+            if (movesToRight < movesToLeft) {
+                nextPosition = Move.moveRight(normalizeBoard, currentPositionPawnToMove, side);
 
-                    nextRow = nextPosition[0];
-                    nextCol = nextPosition[1];
-                }
+                nextRow = nextPosition[0];
+                nextCol = nextPosition[1];
+            } else {
+                nextPosition = Move.moveLeft(normalizeBoard, currentPositionPawnToMove, side);
+
+                nextRow = nextPosition[0];
+                nextCol = nextPosition[1];
             }
-         */
+        }
 
         currentRow /= 2;
         currentCol /= 2;
