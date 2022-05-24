@@ -8,7 +8,7 @@ public class ChallengeTest {
 
     @Test
     public void shouldAcceptChallenge() {
-        assertEquals(Challenge.acceptChallenge(stubJsonChallenge()), stubJsonAcceptChallenge());
+        assertEquals( stubJsonAcceptChallenge(), Challenge.acceptChallenge(stubJsonChallenge()));
     }
 
     /*
