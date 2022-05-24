@@ -37,8 +37,8 @@ public class CheckingTest {
         int[] currentPositionS = new int[]{16, 0};
         int[] currentPositionN = new int[]{0, 0};
         
-        assertFalse(Checking.checkMoveLeft(normalized, currentPositionS, 'S'));
-        assertFalse(Checking.checkMoveLeft(normalized, currentPositionN, 'N'));
+        assertFalse(Checking.checkMoveLeftOneStep(normalized, currentPositionS, 'S'));
+        assertFalse(Checking.checkMoveLeftOneStep(normalized, currentPositionN, 'N'));
     }
         
     @Test
@@ -48,8 +48,8 @@ public class CheckingTest {
         int[] currentPositionN = new int[]{0, 2};
         int[] currentPositionS = new int[]{16, 8};
         
-        assertTrue(Checking.checkMoveLeft(normalized, currentPositionN, 'N'));
-        assertTrue(Checking.checkMoveLeft(normalized, currentPositionS, 'S'));
+        assertTrue(Checking.checkMoveLeftOneStep(normalized, currentPositionN, 'N'));
+        assertTrue(Checking.checkMoveLeftOneStep(normalized, currentPositionS, 'S'));
     }
     
     @Test
@@ -60,21 +60,32 @@ public class CheckingTest {
         int[] currentPositionS = new int[]{16, 16};
         
         //Testing that could not jump an enemie if it is in a border spot
-        assertFalse(Checking.checkMoveRight(normalized, currentPositionN, 'N'));
+        assertFalse(Checking.checkMoveRightOneStep(normalized, currentPositionN, 'N'));
         
         //Testing that could not move right if it is in the right border
-        assertFalse(Checking.checkMoveRight(normalized, currentPositionS, 'S'));
+        assertFalse(Checking.checkMoveRightOneStep(normalized, currentPositionS, 'S'));
     }
         
     @Test
     public void shouldReturnTrueCheckMoveRight() {
-        board = "  N     N S                                                                                                                                                                                                                                                                       S     S N      ".toCharArray();
+        board = "  N     N   S                                                                                                                                                                                                                                                                     S     S   N    ".toCharArray();
         normalized = Board.armarTablero(board);
         int[] currentPositionN = new int[]{0, 8};
         int[] currentPositionS = new int[]{16, 8};
         
-        assertTrue(Checking.checkMoveRight(normalized, currentPositionN, 'N'));
-        assertTrue(Checking.checkMoveRight(normalized, currentPositionS, 'S'));
+        assertTrue(Checking.checkMoveRightOneStep(normalized, currentPositionN, 'N'));
+        assertTrue(Checking.checkMoveRightOneStep(normalized, currentPositionS, 'S'));
+    }
+    
+    @Test
+    public void shouldReturnFourCheckQuantityMoveRight() {
+        board = "  N     N                -*-                                                                                                                                                                                                                                     -*-              S     S   N   S".toCharArray();
+        normalized = Board.armarTablero(board);
+        int[] currentPositionN = new int[]{0, 8};
+        int[] currentPositionS = new int[]{16, 2};
+        
+        assertEquals( 2, Checking.checkQuantityMoveToRight(normalized, currentPositionN, 'N'));
+        assertEquals( 2, Checking.checkQuantityMoveToRight(normalized, currentPositionS, 'S'));
     }
     
     @Test

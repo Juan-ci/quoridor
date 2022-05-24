@@ -45,6 +45,8 @@ public class Board {
         for (int i = 0; i < 17; i++) {
             if(i % 2 == 0) {
                 System.out.print((i / 2) + "|");
+            } else {
+                System.out.print("  ");
             }
             for (int j = 0; j < 17; j++) {
                 //Agregar array para guardar las posiciones de las paredes tambien?

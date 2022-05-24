@@ -53,10 +53,10 @@ public class Pawn {
 
         int[] pawnEnemiePosition = Checking.checkPositionPawnEnemie(side, pawnS1, pawnS2, pawnS3);
 
-        if (pawnEnemiePosition[0] == 10) {  //Agregar check de wall
-            System.out.println("ENTRO IF PUT WALL");
-            response = Wall.putWall(side, pawnEnemiePosition, gameId, turnToken);
-        } else {
+//        if (pawnEnemiePosition[0] == 10) {  //Agregar check de wall
+//            System.out.println("ENTRO IF PUT WALL");
+//            response = Wall.putWall(side, pawnEnemiePosition, gameId, turnToken);
+//        } else {
             currentPositionPawnToMove = choosePawnToMove(side, pawnN1, pawnN2, pawnN3);
             currentRow = currentPositionPawnToMove[0];
             currentCol = currentPositionPawnToMove[1];
@@ -66,12 +66,12 @@ public class Pawn {
 
                 nextRow = nextPosition[0];
                 nextCol = nextPosition[1];
-            } else if (Checking.checkMoveLeft(normalizeBoard, currentPositionPawnToMove, side)) {
+            } else if (Checking.checkMoveLeftOneStep(normalizeBoard, currentPositionPawnToMove, side)) {
                 nextPosition = Move.moveLeft(normalizeBoard, currentPositionPawnToMove, side);
 
                 nextRow = nextPosition[0];
                 nextCol = nextPosition[1];
-            } else if (Checking.checkMoveRight(normalizeBoard, currentPositionPawnToMove, side)) {
+            } else if (Checking.checkMoveRightOneStep(normalizeBoard, currentPositionPawnToMove, side)) {
                 nextPosition = Move.moveRight(normalizeBoard, currentPositionPawnToMove, side);
 
                 nextRow = nextPosition[0];
@@ -99,7 +99,7 @@ public class Pawn {
             jsonResponse.put("data", data);
 
             response = jsonResponse.toString();
-        }
+//        }
 
         return response;
     }
@@ -139,12 +139,12 @@ public class Pawn {
 
             nextRow = nextPosition[0];
             nextCol = nextPosition[1];
-        } else if (Checking.checkMoveRight(normalizeBoard, currentPositionPawnToMove, side)) {
+        } else if (Checking.checkMoveRightOneStep(normalizeBoard, currentPositionPawnToMove, side)) {
             nextPosition = Move.moveRight(normalizeBoard, currentPositionPawnToMove, side);
 
             nextRow = nextPosition[0];
             nextCol = nextPosition[1];
-        } else if (Checking.checkMoveLeft(normalizeBoard, currentPositionPawnToMove, side)) {
+        } else if (Checking.checkMoveLeftOneStep(normalizeBoard, currentPositionPawnToMove, side)) {
             nextPosition = Move.moveLeft(normalizeBoard, currentPositionPawnToMove, side);
 
             nextRow = nextPosition[0];
