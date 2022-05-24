@@ -43,13 +43,15 @@ public class CheckingTest {
         
     @Test
     public void shouldReturnTrueCheckMoveLeft() {
-        board = "  N     N     N                                                                                                                                                                                                                                                                   S     S     S  ".toCharArray();
+        board = "  N N       S N                                                                                                                                                                                                                                                                   S     S     S  ".toCharArray();
         normalized = Board.armarTablero(board);
         int[] currentPositionN = new int[]{0, 2};
+        int[] currentJumpPositionN = new int[]{0, 14};
         int[] currentPositionS = new int[]{16, 8};
         
-        assertTrue(Checking.checkMoveLeftOneStep(normalized, currentPositionN, 'N'));
-        assertTrue(Checking.checkMoveLeftOneStep(normalized, currentPositionS, 'S'));
+//        assertTrue(Checking.checkMoveLeftOneStep(normalized, currentPositionN, 'N'));
+        assertTrue(Checking.checkMoveLeftOneStep(normalized, currentJumpPositionN, 'N'));
+//        assertTrue(Checking.checkMoveLeftOneStep(normalized, currentPositionS, 'S'));
     }
     
     @Test

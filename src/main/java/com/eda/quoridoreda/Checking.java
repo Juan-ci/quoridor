@@ -169,6 +169,13 @@ public class Checking {
                             && normalizeBoard[currentRow + 1][currentCol - 2] == ' ') {  //Check if there isn´t also a wall forward
                         moveAllowed = true;
                         return moveAllowed;
+                    } else if((currentCol - 4) >= 0 //Still inside the board
+                            && normalizeBoard[currentRow][currentCol - 2] == 'S'    //If there are an opponent
+                            && normalizeBoard[currentRow][currentCol - 3] == ' '    //If there isn´t a wall
+                            && normalizeBoard[currentRow][currentCol - 4] == ' '    //If is empty to jump there
+                            && normalizeBoard[currentRow + 1][currentCol - 4] == ' ') { //If there isn´t a wall
+                        moveAllowed = true;
+                        return moveAllowed;
                     } else {
                         return moveAllowed;
                     }
