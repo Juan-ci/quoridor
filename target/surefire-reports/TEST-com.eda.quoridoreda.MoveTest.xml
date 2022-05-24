@@ -57,7 +57,7 @@
     <property name="sun.cpu.endian" value="little"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="com.eda.quoridoreda.MoveTest" name="shouldMoveLeft" time="0.001"/>
-  <testcase classname="com.eda.quoridoreda.MoveTest" name="shouldMoveForward" time="0"/>
+  <testcase classname="com.eda.quoridoreda.MoveTest" name="shouldMoveLeft" time="0"/>
+  <testcase classname="com.eda.quoridoreda.MoveTest" name="shouldMoveForward" time="0.001"/>
   <testcase classname="com.eda.quoridoreda.MoveTest" name="shouldMoveRight" time="0"/>
 </testsuite>

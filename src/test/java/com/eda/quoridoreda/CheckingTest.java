@@ -53,7 +53,7 @@ public class CheckingTest {
         assertTrue(Checking.checkMoveLeftOneStep(normalized, currentPositionN, 'N'));
         assertTrue(Checking.checkMoveLeftOneStep(normalized, currentPositionS, 'S'));
         
-        //One step to left there is an opponent so it has to jump
+        //There is an opponent One step to left so it has to jump
         int[] currentJumpPositionN = new int[]{0, 14};
         int[] currentJumpPositionS = new int[]{16, 14};
         
@@ -77,13 +77,22 @@ public class CheckingTest {
         
     @Test
     public void shouldReturnTrueCheckMoveRight() {
-        board = "  N     N   S                                                                                                                                                                                                                                                                     S     S   N    ".toCharArray();
+        board = "  N     N S                                                                                                                                                                                                                                                                       S     S N      ".toCharArray();
         normalized = Board.armarTablero(board);
-        int[] currentPositionN = new int[]{0, 8};
-        int[] currentPositionS = new int[]{16, 8};
+        
+        //One step to left
+        int[] currentPositionN = new int[]{0, 2};
+        int[] currentPositionS = new int[]{16, 2};
         
         assertTrue(Checking.checkMoveRightOneStep(normalized, currentPositionN, 'N'));
         assertTrue(Checking.checkMoveRightOneStep(normalized, currentPositionS, 'S'));
+        
+        //There is an opponent One step to left so it has to jump
+        int[] currentJumpPositionN = new int[]{0, 8};
+        int[] currentJumpPositionS = new int[]{16, 8};
+        
+        assertTrue(Checking.checkMoveRightOneStep(normalized, currentJumpPositionN, 'N'));
+        assertTrue(Checking.checkMoveRightOneStep(normalized, currentJumpPositionS, 'S'));
     }
     
     @Test
