@@ -18,10 +18,13 @@ public class Checking {
                 }
                 for (int i = currentRow + 1; i < 17; i++) {
                     if (i < 13 && normalizeBoard[i + 1][currentCol] == 'S' //Check enemie
-                            && normalizeBoard[i + 2][currentCol] == ' ' //Check there isn´t a wall
-                            && normalizeBoard[i + 3][currentCol] == ' ') {
-                        moveAllowed = true;
-                        return moveAllowed;
+                            && normalizeBoard[i + 2][currentCol] == ' ') {  //Check there isn´t a wall
+                        if (normalizeBoard[i + 3][currentCol] == ' ') {
+                            moveAllowed = true;
+                            return moveAllowed;
+                        } else {
+                            return moveAllowed;
+                        }
                     }
                 }
             }
@@ -34,10 +37,13 @@ public class Checking {
                 }
                 for (int i = currentRow - 1; i > 0; i--) {
                     if (i > 4 && normalizeBoard[i - 1][currentCol] == 'N' //Check enemie
-                            && normalizeBoard[i - 2][currentCol] == ' ' //Check there isn´t a wall
-                            && normalizeBoard[i - 3][currentCol] == ' ') {
-                        moveAllowed = true;
-                        return moveAllowed;
+                            && normalizeBoard[i - 2][currentCol] == ' ') { //Check there isn´t a wall
+                        if (normalizeBoard[i - 3][currentCol] == ' ') {
+                            moveAllowed = true;
+                            return moveAllowed;
+                        } else {
+                            return moveAllowed;
+                        }
                     }
                 }
             }
@@ -69,6 +75,13 @@ public class Checking {
                             && normalizeBoard[currentRow + 1][currentCol + 2] == ' ') {  //Check if there isn´t also a wall forward
                         moveAllowed = true;
                         return moveAllowed;
+                    } else if ((currentCol + 4) < 17 //Still inside the board
+                            && normalizeBoard[currentRow][currentCol + 2] == 'S' //If there are an opponent
+                            && normalizeBoard[currentRow][currentCol + 3] == ' ' //If there isn´t a wall
+                            && normalizeBoard[currentRow][currentCol + 4] == ' ' //If is empty to jump there
+                            && normalizeBoard[currentRow + 1][currentCol + 4] == ' ') { //If there isn´t a wall
+                        moveAllowed = true;
+                        return moveAllowed;
                     } else {
                         return moveAllowed;
                     }
@@ -83,6 +96,13 @@ public class Checking {
                 if (normalizeBoard[currentRow][currentCol + 1] == ' ' && (currentCol + 1) < 16) {            //Check if there isn´t a wall
                     if (normalizeBoard[currentRow][currentCol + 2] == ' ' //Check if there isn´t a pawn enemie
                             && normalizeBoard[currentRow - 1][currentCol + 2] == ' ') {  //Check if there isn´t also a wall forward to next move
+                        moveAllowed = true;
+                        return moveAllowed;
+                    } else if ((currentCol + 4) < 17 //Still inside the board
+                            && normalizeBoard[currentRow][currentCol + 2] == 'N' //If there are an opponent
+                            && normalizeBoard[currentRow][currentCol + 3] == ' ' //If there isn´t a wall
+                            && normalizeBoard[currentRow][currentCol + 4] == ' ' //If is empty to jump there
+                            && normalizeBoard[currentRow - 1][currentCol + 4] == ' ') { //If there isn´t a wall
                         moveAllowed = true;
                         return moveAllowed;
                     } else {
@@ -111,15 +131,21 @@ public class Checking {
                     return quantityMoves;
                 }
                 quantityMoves = 0;
-                for (int j = currentCol + 1; j < 17; j++) {
+                for (int j = currentCol; j < 17; j++) {
                     if (normalizeBoard[currentRow][j] == ' ' && j < 17) {            //Check if there isn´t a wall
-                        if (normalizeBoard[currentRow][j + 1] == ' ' //Check if there isn´t a pawn enemie
-                                && normalizeBoard[currentRow + 1][j + 1] == ' ') {  //Check if there isn´t also a wall forward
-                            quantityMoves++;
+                        if ((j % 2) == 0 //Check if the column is even
+                                && normalizeBoard[currentRow + 1][j] == ' ') {  //Check if there isn´t also a wall forward
+                            quantityMoves /= 2;
+                            return quantityMoves;
+                        } else if (normalizeBoard[currentRow][j] == '|'
+                                || (j == 16 && normalizeBoard[currentRow + 1][j] == '-')) {  //If there is a wall return a number out of bounds
+                            quantityMoves = 17;
                             return quantityMoves;
                         } else {
                             quantityMoves++;
                         }
+                    } else {
+                        quantityMoves++;
                     }
                 }
             }
@@ -130,15 +156,21 @@ public class Checking {
                     return quantityMoves;
                 }
                 quantityMoves = 0;
-                for (int j = currentCol + 1; j < 17; j++) {
-                    if (normalizeBoard[currentRow][j] == ' ' && j < 16) {            //Check if there isn´t a wall
-                        if (normalizeBoard[currentRow][j + 1] == ' ' //Check if there isn´t a pawn enemie
-                                && normalizeBoard[currentRow - 1][j + 1] == ' ') {  //Check if there isn´t also a wall forward to next move
-                            quantityMoves++;
+                for (int j = currentCol; j < 17; j++) {
+                    if (normalizeBoard[currentRow][j] == ' ' && j < 17) {            //Check if there isn´t a wall
+                        if ((j % 2) == 0 //Check if the column is even
+                                && normalizeBoard[currentRow - 1][j] == ' ') {  //Check if there isn´t also a wall forward to next move
+                            quantityMoves /= 2;
+                            return quantityMoves;
+                        } else if (normalizeBoard[currentRow][j] == '|'
+                                || (j == 16 && normalizeBoard[currentRow - 1][j] == '-')) {  //If there is a wall return a number out of bounds
+                            quantityMoves = 17;
                             return quantityMoves;
                         } else {
                             quantityMoves++;
                         }
+                    } else {
+                        quantityMoves++;
                     }
                 }
             }
@@ -148,7 +180,7 @@ public class Checking {
         }
         return quantityMoves;
     }
-    
+
     public static boolean checkMoveLeftOneStep(char[][] normalizeBoard, int[] currentPosition, char side) {
         int currentRow = currentPosition[0];
         int currentCol = currentPosition[1];
@@ -169,6 +201,13 @@ public class Checking {
                             && normalizeBoard[currentRow + 1][currentCol - 2] == ' ') {  //Check if there isn´t also a wall forward
                         moveAllowed = true;
                         return moveAllowed;
+                    } else if ((currentCol - 4) >= 0 //Still inside the board
+                            && normalizeBoard[currentRow][currentCol - 2] == 'S' //If there are an opponent
+                            && normalizeBoard[currentRow][currentCol - 3] == ' ' //If there isn´t a wall
+                            && normalizeBoard[currentRow][currentCol - 4] == ' ' //If is empty to jump there
+                            && normalizeBoard[currentRow + 1][currentCol - 4] == ' ') { //If there isn´t a wall
+                        moveAllowed = true;
+                        return moveAllowed;
                     } else {
                         return moveAllowed;
                     }
@@ -183,6 +222,13 @@ public class Checking {
                 if (normalizeBoard[currentRow][currentCol - 1] == ' ' && (currentCol - 1) > 0) {    //Check if there isn´t a wall
                     if (normalizeBoard[currentRow][currentCol - 2] == ' ' //Check if there isn´t a pawn enemie
                             && normalizeBoard[currentRow - 1][currentCol - 2] == ' ') {  //Check if there isn´t also a wall forward to next move
+                        moveAllowed = true;
+                        return moveAllowed;
+                    } else if ((currentCol - 4) >= 0 //Still inside the board
+                            && normalizeBoard[currentRow][currentCol - 2] == 'N' //If there are an opponent
+                            && normalizeBoard[currentRow][currentCol - 3] == ' ' //If there isn´t a wall
+                            && normalizeBoard[currentRow][currentCol - 4] == ' ' //If is empty to jump there
+                            && normalizeBoard[currentRow - 1][currentCol - 4] == ' ') { //If there isn´t a wall
                         moveAllowed = true;
                         return moveAllowed;
                     } else {
@@ -212,15 +258,21 @@ public class Checking {
                     return quantityMoves;
                 }
                 quantityMoves = 0;
-                for (int j = currentCol - 1; j > 0; j--) {
+                for (int j = currentCol; j > 0; j--) {
                     if (normalizeBoard[currentRow][j] == ' ' && j > 0) {            //Check if there isn´t a wall
-                        if (normalizeBoard[currentRow][j - 1] == ' ' //Check if there isn´t a pawn enemie
-                                && normalizeBoard[currentRow + 1][j - 1] == ' ') {  //Check if there isn´t also a wall forward
-                            quantityMoves++;
+                        if ((j % 2) == 0 //Check if the column is even
+                                && normalizeBoard[currentRow + 1][j] == ' ') {  //Check if there isn´t also a wall forward
+                            quantityMoves /= 2;
+                            return quantityMoves;
+                        } else if (normalizeBoard[currentRow][j] == '|'
+                                || (j == 0 && normalizeBoard[currentRow + 1][j] == '-')) {
+                            quantityMoves = 17;
                             return quantityMoves;
                         } else {
                             quantityMoves++;
                         }
+                    } else {
+                        quantityMoves++;
                     }
                 }
             }
@@ -231,15 +283,21 @@ public class Checking {
                     return quantityMoves;
                 }
                 quantityMoves = 0;
-                for (int j = currentCol - 1; j > 0; j--) {
+                for (int j = currentCol; j > 0; j--) {
                     if (normalizeBoard[currentRow][j] == ' ' && j > 0) {    //Check if there isn´t a wall
-                        if (normalizeBoard[currentRow][j - 1] == ' ' //Check if there isn´t a pawn enemie
-                                && normalizeBoard[currentRow - 1][j - 1] == ' ') {  //Check if there isn´t also a wall forward to next move
-                            quantityMoves++;
+                        if ((j % 2) == 0 //Check if the column is even
+                                && normalizeBoard[currentRow - 1][j] == ' ') {  //Check if there isn´t also a wall forward to next move
+                            quantityMoves /= 2;
+                            return quantityMoves;
+                        } else if (normalizeBoard[currentRow][j] == '|'
+                                || (j == 0 && normalizeBoard[currentRow - 1][j] == '-')) {
+                            quantityMoves = 17;
                             return quantityMoves;
                         } else {
                             quantityMoves++;
                         }
+                    } else {
+                        quantityMoves++;
                     }
                 }
             }
@@ -249,7 +307,7 @@ public class Checking {
         }
         return quantityMoves;
     }
-    
+
     public static int[] checkPositionPawnEnemie(char namePawn, int[] pawn1, int[] pawn2, int[] pawn3) {
         switch (namePawn) {
             case 'N' -> {
