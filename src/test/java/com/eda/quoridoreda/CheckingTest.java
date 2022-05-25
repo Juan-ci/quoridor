@@ -96,7 +96,7 @@ public class CheckingTest {
     }
     
     @Test
-    public void shouldReturnTwoCheckQuantityMoveRight() {
+    public void shouldReturnFiveCheckQuantityMoveRight() {
         board = "      N              -*- -*- -*-        S                                                                     N                                       N                                                                                                                           S           S  ".toCharArray();
         normalized = Board.armarTablero(board);
         int[] currentPositionN = new int[]{0, 6};
@@ -107,14 +107,14 @@ public class CheckingTest {
     }
     
     @Test
-    public void shouldReturnTwoCheckQuantityMoveLeft() {
-        board = "  N         N              -*-                                                                                                                                                                                                                                       -*-        S       S   N   S".toCharArray();
+    public void shouldReturnSixCheckQuantityMoveLeft() {
+        board = "              N      -*- -*- -*-                S                                                             N                                       N                                                                                                                           S           S  ".toCharArray();
         normalized = Board.armarTablero(board);
-        int[] currentPositionN = new int[]{0, 12};
-        int[] currentPositionS = new int[]{16, 8};
+        int[] currentPositionN = new int[]{0, 14};
+        int[] currentPositionS = new int[]{2, 14};
         
-        assertEquals( 2, Checking.checkQuantityMoveToLeft(normalized, currentPositionN, 'N'));
-        assertEquals( 2, Checking.checkQuantityMoveToLeft(normalized, currentPositionS, 'S'));
+        assertEquals( 6, Checking.checkQuantityMoveToLeft(normalized, currentPositionN, 'N'));
+        assertEquals( 6, Checking.checkQuantityMoveToLeft(normalized, currentPositionS, 'S'));
     }
     
     @Test
