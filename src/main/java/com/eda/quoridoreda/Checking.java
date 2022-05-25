@@ -131,15 +131,17 @@ public class Checking {
                     return quantityMoves;
                 }
                 quantityMoves = 0;
-                for (int j = currentCol + 1; j < 17; j++) {
+                for (int j = currentCol; j < 17; j++) {
                     if (normalizeBoard[currentRow][j] == ' ' && j < 17) {            //Check if there isn´t a wall
-                        if (normalizeBoard[currentRow][j + 1] == ' ' //Check if there isn´t a pawn enemie
-                                && normalizeBoard[currentRow + 1][j + 1] == ' ') {  //Check if there isn´t also a wall forward
-                            quantityMoves++;
+                        if ((j % 2) == 0 //Check if the column is even
+                                && normalizeBoard[currentRow + 1][j] == ' ') {  //Check if there isn´t also a wall forward
+                            quantityMoves /= 2;
                             return quantityMoves;
                         } else {
                             quantityMoves++;
                         }
+                    } else {
+                        quantityMoves++;
                     }
                 }
             }
@@ -150,15 +152,17 @@ public class Checking {
                     return quantityMoves;
                 }
                 quantityMoves = 0;
-                for (int j = currentCol + 1; j < 17; j++) {
-                    if (normalizeBoard[currentRow][j] == ' ' && j < 16) {            //Check if there isn´t a wall
-                        if (normalizeBoard[currentRow][j + 1] == ' ' //Check if there isn´t a pawn enemie
-                                && normalizeBoard[currentRow - 1][j + 1] == ' ') {  //Check if there isn´t also a wall forward to next move
-                            quantityMoves++;
+                for (int j = currentCol ; j < 17; j++) {
+                    if (normalizeBoard[currentRow][j] == ' ' && j < 17) {            //Check if there isn´t a wall
+                        if ((j % 2) == 0 //Check if the column is even
+                                && normalizeBoard[currentRow - 1][j] == ' ') {  //Check if there isn´t also a wall forward to next move
+                            quantityMoves /= 2;
                             return quantityMoves;
                         } else {
                             quantityMoves++;
                         }
+                    } else {
+                        quantityMoves++;
                     }
                 }
             }

@@ -97,13 +97,13 @@ public class CheckingTest {
     
     @Test
     public void shouldReturnTwoCheckQuantityMoveRight() {
-        board = "  N     N                -*-                                                                                                                                                                                                                                     -*-              S     S   N   S".toCharArray();
+        board = "      N              -*- -*- -*-        S                                                                     N                                       N                                                                                                                           S           S  ".toCharArray();
         normalized = Board.armarTablero(board);
-        int[] currentPositionN = new int[]{0, 8};
-        int[] currentPositionS = new int[]{16, 2};
+        int[] currentPositionN = new int[]{0, 6};
+        int[] currentPositionS = new int[]{2, 6};
         
-        assertEquals( 2, Checking.checkQuantityMoveToRight(normalized, currentPositionN, 'N'));
-        assertEquals( 2, Checking.checkQuantityMoveToRight(normalized, currentPositionS, 'S'));
+        assertEquals( 5, Checking.checkQuantityMoveToRight(normalized, currentPositionN, 'N'));
+        assertEquals( 5, Checking.checkQuantityMoveToRight(normalized, currentPositionS, 'S'));
     }
     
     @Test
