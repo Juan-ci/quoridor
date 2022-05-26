@@ -118,6 +118,32 @@ public class CheckingTest {
     }
     
     @Test
+    public void shouldReturnTrueCheckCanPutWall() {
+        board = "              N                         N       S      -*- -*-                                                N                                                                                                              -*- -*-            | S              *                |           S  ".toCharArray();
+        normalized = Board.armarTablero(board);
+        int[] currentPositionN = new int[]{0, 14};
+        int[] currentPositionS = new int[]{2, 14};
+        int[] currentPositionOneWallInFrontN = new int[]{6, 8};
+        int[] currentPositionOneWallInFrontS = new int[]{16, 14};
+        int[] currentPositionWallAsideN = new int[]{2, 6};
+        int[] currentPositionWallAsideS = new int[]{14, 4};
+        
+        //Situation: no wall in front of the pawns
+        //Turn pawn S, pass the position of pawn enemie N
+        assertTrue(Checking.checkCanPutWall(normalized, currentPositionN, 'S'));
+        //Turn pawn N, pass the position of pawn enemie S
+        assertTrue(Checking.checkCanPutWall(normalized, currentPositionS, 'N'));
+        
+        //Situation: there is a wall in front of it, but there isn´t another wall aside of this wall
+        assertTrue(Checking.checkCanPutWall(normalized, currentPositionOneWallInFrontS, 'N'));
+        assertTrue(Checking.checkCanPutWall(normalized, currentPositionOneWallInFrontN, 'S'));
+        
+        
+        assertTrue(Checking.checkCanPutWall(normalized, currentPositionWallAsideS, 'N'));
+        assertTrue(Checking.checkCanPutWall(normalized, currentPositionWallAsideN, 'S'));
+    }
+    
+    @Test
     public void shouldReturnPawn3() {
         int[] pawnS1 = new int[]{16, 12};
         int[] pawnS2 = new int[]{14, 2};
@@ -126,7 +152,6 @@ public class CheckingTest {
         int[] pawnN2 = new int[]{4, 2};
         int[] pawnN3 = new int[]{10, 6};
         
-        //assertArrayEquals(Checking.checkPositionPawnEnemie('N', pawnS1, pawnS2, pawnS3), pawnS3);
         assertArrayEquals( pawnS3,Checking.checkPositionPawnEnemie('N', pawnS1, pawnS2, pawnS3));
         assertArrayEquals( pawnN3, Checking.checkPositionPawnEnemie('S', pawnN1, pawnN2, pawnN3));
     }

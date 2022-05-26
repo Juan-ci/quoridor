@@ -70,6 +70,10 @@ public class Move {
                     //Single step
                     nextPosition[0] = currentRow;
                     nextPosition[1] = currentCol + 2;
+                } else {
+                    System.out.println("Jumpt to right");
+                    nextPosition[0] = currentRow;
+                    nextPosition[1] = currentCol + 4;
                 }
             }
             case 'S' -> {
@@ -78,6 +82,10 @@ public class Move {
                     //Single step
                     nextPosition[0] = currentRow;
                     nextPosition[1] = currentCol + 2;
+                } else {
+                    System.out.println("Jumpt to right");
+                    nextPosition[0] = currentRow;
+                    nextPosition[1] = currentCol + 4;
                 }
             }
             default -> {
@@ -101,6 +109,10 @@ public class Move {
                     //Single step
                     nextPosition[0] = currentRow;
                     nextPosition[1] = currentCol - 2;
+                } else {
+                    System.out.println("Jump to left");
+                    nextPosition[0] = currentRow;
+                    nextPosition[1] = currentCol - 4;
                 }
             }
             case 'S' -> {
@@ -109,6 +121,10 @@ public class Move {
                     //Single step
                     nextPosition[0] = currentRow;
                     nextPosition[1] = currentCol - 2;
+                } else {
+                    System.out.println("Jump to left");
+                    nextPosition[0] = currentRow;
+                    nextPosition[1] = currentCol - 4;
                 }
             }
             default -> {
