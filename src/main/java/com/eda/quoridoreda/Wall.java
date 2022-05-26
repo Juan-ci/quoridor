@@ -32,7 +32,7 @@ public class Wall {
                         && normalizeBoard[enemieRow][enemieCol + 1] == ' ') {
                     orientation = "v";
                     col = enemieCol;
-                    row = enemieRow - 2;
+                    row = enemieRow + 2;
                 } else {
                     //Check to put wall 'v'
                     if (enemieCol > 1 && normalizeBoard[enemieRow][enemieCol - 1] == ' ' //Check if there is a vertical wall
@@ -86,7 +86,7 @@ public class Wall {
                         && normalizeBoard[enemieRow][enemieCol + 1] == ' ') {
                     orientation = "v";
                     col = enemieCol;
-                    row = enemieRow + 2;
+                    row = enemieRow - 2;
                 } else {
                     //Check to put wall 'v'
                     if (enemieCol > 1 && normalizeBoard[enemieRow][enemieCol - 1] == ' ' //Check if there is a vertical wall
