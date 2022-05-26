@@ -33,6 +33,7 @@ public class Pawn {
         char side = json.getString("side").charAt(0);
         int[] currentPositionPawnToMove = new int[2];
         int[] nextPosition = new int[2];
+        int walls = json.getInt("walls");
         String response = null;
 
         //Current position pawn 1, in normalized board 17x17
@@ -53,68 +54,68 @@ public class Pawn {
 
         int[] pawnEnemiePosition = Checking.checkPositionPawnEnemie(side, pawnS1, pawnS2, pawnS3);
 
-//        if (pawnEnemiePosition[0] == 10) {  //Agregar check de wall
-//            System.out.println("ENTRO IF PUT WALL");
-//            response = Wall.putWall(side, pawnEnemiePosition, gameId, turnToken);
-//        } else {
-        currentPositionPawnToMove = choosePawnToMove(side, pawnN1, pawnN2, pawnN3);
-        currentRow = currentPositionPawnToMove[0];
-        currentCol = currentPositionPawnToMove[1];
-
-        if (Checking.checkMoveForward(normalizeBoard, currentPositionPawnToMove, side)) {
-            nextPosition = Move.moveForward(normalizeBoard, currentPositionPawnToMove, side);
-
-            nextRow = nextPosition[0];
-            nextCol = nextPosition[1];
-        } else if (Checking.checkMoveLeftOneStep(normalizeBoard, currentPositionPawnToMove, side)) {
-            nextPosition = Move.moveLeft(normalizeBoard, currentPositionPawnToMove, side);
-
-            nextRow = nextPosition[0];
-            nextCol = nextPosition[1];
-        } else if (Checking.checkMoveRightOneStep(normalizeBoard, currentPositionPawnToMove, side)) {
-            nextPosition = Move.moveRight(normalizeBoard, currentPositionPawnToMove, side);
-
-            nextRow = nextPosition[0];
-            nextCol = nextPosition[1];
+        if (pawnEnemiePosition[0] < 8 && walls > 0 && Checking.checkCanPutWall(normalizeBoard, pawnEnemiePosition, side)) {  //Agregar check de wall
+            System.out.println("ENTRO IF PUT WALL");
+            response = Wall.putWall(side, pawnEnemiePosition, gameId, turnToken, normalizeBoard);
         } else {
-            int movesToRight = Checking.checkQuantityMoveToRight(normalizeBoard, currentPositionPawnToMove, side);
-            int movesToLeft = Checking.checkQuantityMoveToLeft(normalizeBoard, currentPositionPawnToMove, side);
+            currentPositionPawnToMove = choosePawnToMove(side, pawnN1, pawnN2, pawnN3);
+            currentRow = currentPositionPawnToMove[0];
+            currentCol = currentPositionPawnToMove[1];
 
-            if (movesToRight < movesToLeft) {
+            if (Checking.checkMoveForward(normalizeBoard, currentPositionPawnToMove, side)) {
+                nextPosition = Move.moveForward(normalizeBoard, currentPositionPawnToMove, side);
+
+                nextRow = nextPosition[0];
+                nextCol = nextPosition[1];
+            } else if (Checking.checkMoveLeftOneStep(normalizeBoard, currentPositionPawnToMove, side)) {
+                nextPosition = Move.moveLeft(normalizeBoard, currentPositionPawnToMove, side);
+
+                nextRow = nextPosition[0];
+                nextCol = nextPosition[1];
+            } else if (Checking.checkMoveRightOneStep(normalizeBoard, currentPositionPawnToMove, side)) {
                 nextPosition = Move.moveRight(normalizeBoard, currentPositionPawnToMove, side);
 
                 nextRow = nextPosition[0];
                 nextCol = nextPosition[1];
             } else {
-                nextPosition = Move.moveLeft(normalizeBoard, currentPositionPawnToMove, side);
+                int movesToRight = Checking.checkQuantityMoveToRight(normalizeBoard, currentPositionPawnToMove, side);
+                int movesToLeft = Checking.checkQuantityMoveToLeft(normalizeBoard, currentPositionPawnToMove, side);
 
-                nextRow = nextPosition[0];
-                nextCol = nextPosition[1];
+                if (movesToRight < movesToLeft) {
+                    nextPosition = Move.moveRight(normalizeBoard, currentPositionPawnToMove, side);
+
+                    nextRow = nextPosition[0];
+                    nextCol = nextPosition[1];
+                } else {
+                    nextPosition = Move.moveLeft(normalizeBoard, currentPositionPawnToMove, side);
+
+                    nextRow = nextPosition[0];
+                    nextCol = nextPosition[1];
+                }
             }
+
+            currentRow /= 2;
+            currentCol /= 2;
+            nextRow /= 2;
+            nextCol /= 2;
+
+            System.out.println("NextRow " + nextRow + " NextCol " + nextCol);
+            //Armando json object 'data'
+            JSONObject data = new JSONObject();
+            data.put("to_col", nextCol);
+            data.put("turn_token", turnToken);
+            data.put("game_id", gameId);
+            data.put("to_row", nextRow);
+            data.put("from_col", currentCol);
+            data.put("from_row", currentRow);
+
+            //Armando json de respuesta de movimiento
+            JSONObject jsonResponse = new JSONObject();
+            jsonResponse.put("action", "move");
+            jsonResponse.put("data", data);
+
+            response = jsonResponse.toString();
         }
-
-        currentRow /= 2;
-        currentCol /= 2;
-        nextRow /= 2;
-        nextCol /= 2;
-
-        System.out.println("NextRow " + nextRow + " NextCol " + nextCol);
-        //Armando json object 'data'
-        JSONObject data = new JSONObject();
-        data.put("to_col", nextCol);
-        data.put("turn_token", turnToken);
-        data.put("game_id", gameId);
-        data.put("to_row", nextRow);
-        data.put("from_col", currentCol);
-        data.put("from_row", currentRow);
-
-        //Armando json de respuesta de movimiento
-        JSONObject jsonResponse = new JSONObject();
-        jsonResponse.put("action", "move");
-        jsonResponse.put("data", data);
-
-        response = jsonResponse.toString();
-//        }
 
         return response;
     }
@@ -127,6 +128,8 @@ public class Pawn {
         char side = json.getString("side").charAt(0);
         int[] currentPositionPawnToMove = new int[2];
         int[] nextPosition = new int[2];
+        String response = null;
+        int walls = json.getInt("walls");
 
         //Current position pawn 1
         int currentRow = 0;
@@ -149,42 +152,66 @@ public class Pawn {
         currentRow = currentPositionPawnToMove[0];
         currentCol = currentPositionPawnToMove[1];
 
-        if (Checking.checkMoveForward(normalizeBoard, currentPositionPawnToMove, side)) {
-            nextPosition = Move.moveForward(normalizeBoard, currentPositionPawnToMove, side);
+        int[] pawnEnemiePosition = Checking.checkPositionPawnEnemie(side, pawnN1, pawnN2, pawnN3);
 
-            nextRow = nextPosition[0];
-            nextCol = nextPosition[1];
-        } else if (Checking.checkMoveRightOneStep(normalizeBoard, currentPositionPawnToMove, side)) {
-            nextPosition = Move.moveRight(normalizeBoard, currentPositionPawnToMove, side);
+        if (pawnEnemiePosition[0] > 10 && walls > 0 && Checking.checkCanPutWall(normalizeBoard, pawnEnemiePosition, side)) {  //Agregar check de wall
+            System.out.println("ENTRO IF PUT WALL");
+            response = Wall.putWall(side, pawnEnemiePosition, gameId, turnToken, normalizeBoard);
+        } else {
+            if (Checking.checkMoveForward(normalizeBoard, currentPositionPawnToMove, side)) {
+                nextPosition = Move.moveForward(normalizeBoard, currentPositionPawnToMove, side);
 
-            nextRow = nextPosition[0];
-            nextCol = nextPosition[1];
-        } else if (Checking.checkMoveLeftOneStep(normalizeBoard, currentPositionPawnToMove, side)) {
-            nextPosition = Move.moveLeft(normalizeBoard, currentPositionPawnToMove, side);
+                nextRow = nextPosition[0];
+                nextCol = nextPosition[1];
+            } else if (Checking.checkMoveRightOneStep(normalizeBoard, currentPositionPawnToMove, side)) {
+                nextPosition = Move.moveRight(normalizeBoard, currentPositionPawnToMove, side);
 
-            nextRow = nextPosition[0];
-            nextCol = nextPosition[1];
+                nextRow = nextPosition[0];
+                nextCol = nextPosition[1];
+            } else if (Checking.checkMoveLeftOneStep(normalizeBoard, currentPositionPawnToMove, side)) {
+                nextPosition = Move.moveLeft(normalizeBoard, currentPositionPawnToMove, side);
+
+                nextRow = nextPosition[0];
+                nextCol = nextPosition[1];
+            } else {
+                int movesToRight = Checking.checkQuantityMoveToRight(normalizeBoard, currentPositionPawnToMove, side);
+                int movesToLeft = Checking.checkQuantityMoveToLeft(normalizeBoard, currentPositionPawnToMove, side);
+
+                if (movesToRight < movesToLeft) {
+                    nextPosition = Move.moveRight(normalizeBoard, currentPositionPawnToMove, side);
+
+                    nextRow = nextPosition[0];
+                    nextCol = nextPosition[1];
+                } else {
+                    nextPosition = Move.moveLeft(normalizeBoard, currentPositionPawnToMove, side);
+
+                    nextRow = nextPosition[0];
+                    nextCol = nextPosition[1];
+                }
+            }
+
+            currentRow /= 2;
+            currentCol /= 2;
+            nextRow /= 2;
+            nextCol /= 2;
+
+            //Armando json object 'data' response
+            JSONObject data = new JSONObject();
+            data.put("game_id", gameId);
+            data.put("turn_token", turnToken);
+            data.put("from_row", currentRow);
+            data.put("from_col", currentCol);
+            data.put("to_row", nextRow);
+            data.put("to_col", nextCol);
+
+            //Armando json de respuesta de movimiento
+            jsonResponse.put("action", "move");
+            jsonResponse.put("data", data);
+            
+            response = jsonResponse.toString();
         }
 
-        currentRow /= 2;
-        currentCol /= 2;
-        nextRow /= 2;
-        nextCol /= 2;
-
-        //Armando json object 'data' response
-        JSONObject data = new JSONObject();
-        data.put("game_id", gameId);
-        data.put("turn_token", turnToken);
-        data.put("from_row", currentRow);
-        data.put("from_col", currentCol);
-        data.put("to_row", nextRow);
-        data.put("to_col", nextCol);
-
-        //Armando json de respuesta de movimiento
-        jsonResponse.put("action", "move");
-        jsonResponse.put("data", data);
-
-        return jsonResponse.toString();
+        return response;
     }
 
     public static int[] choosePawnToMove(char namePawn, int[] pawn1, int[] pawn2, int[] pawn3) {
@@ -224,19 +251,24 @@ public class Pawn {
 
         int getRandomValue = ThreadLocalRandom.current().nextInt(0, max) + min;
         System.out.println("Pawn n° " + getRandomValue + " selected.");
+        
 
         switch (getRandomValue) {
             case 1 -> {
+                System.out.println("Row " + pawn1[0] + " Col " + pawn1[1]);
                 return pawn1;
             }
             case 2 -> {
+                System.out.println("Row " + pawn2[0] + " Col " + pawn2[1]);
                 return pawn2;
             }
             case 3 -> {
+                System.out.println("Row " + pawn3[0] + " Col " + pawn3[1]);
                 return pawn3;
             }
             default -> {
                 System.out.println("ERROR PICKING RANDOM PAWN.");
+                System.out.println("Row " + pawn2[0] + " Col " + pawn2[1]);
                 return pawn2;
             }
         }
