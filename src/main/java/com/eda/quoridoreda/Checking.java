@@ -67,7 +67,8 @@ public class Checking {
             case 'N': {
                 if (currentCol == 16
                         || (currentCol == 14
-                        && normalizeBoard[currentRow][currentCol + 2] == 'S')) {
+                        && normalizeBoard[currentRow][currentCol + 2] == 'S')
+                        || normalizeBoard[currentRow][currentCol + 1] == '|') {
                     return moveAllowed;
                 }
                 if (normalizeBoard[currentRow][currentCol + 1] == ' ' && (currentCol + 1) < 17) {            //Check if there isn´t a wall
@@ -85,6 +86,8 @@ public class Checking {
                     } else {
                         return moveAllowed;
                     }
+                } else {
+                    return moveAllowed;
                 }
             }
             case 'S': {
@@ -108,6 +111,8 @@ public class Checking {
                     } else {
                         return moveAllowed;
                     }
+                } else {
+                    return moveAllowed;
                 }
             }
             default: {
@@ -127,7 +132,8 @@ public class Checking {
             case 'N': {
                 if (currentCol == 16
                         || (currentCol == 14
-                        && normalizeBoard[currentRow][currentCol + 2] == 'S')) {
+                        && normalizeBoard[currentRow][currentCol + 2] == 'S')
+                        || normalizeBoard[currentRow][currentCol + 1] == '|') {
                     return quantityMoves;
                 }
                 quantityMoves = 0;
@@ -137,8 +143,10 @@ public class Checking {
                                 && normalizeBoard[currentRow + 1][j] == ' ') {  //Check if there isn´t also a wall forward
                             quantityMoves /= 2;
                             return quantityMoves;
-                        } else if (normalizeBoard[currentRow][j] == '|'
-                                || (j == 16 && normalizeBoard[currentRow + 1][j] == '-')) {  //If there is a wall return a number out of bounds
+                        } else if (j == 16 && normalizeBoard[currentRow + 1][j] == '-') {  //If there is a wall return a number out of bounds
+                            quantityMoves = 17;
+                            return quantityMoves;
+                        } else if (normalizeBoard[currentRow][j] == '|') {
                             quantityMoves = 17;
                             return quantityMoves;
                         } else {
@@ -162,13 +170,15 @@ public class Checking {
                                 && normalizeBoard[currentRow - 1][j] == ' ') {  //Check if there isn´t also a wall forward to next move
                             quantityMoves /= 2;
                             return quantityMoves;
-                        } else if (normalizeBoard[currentRow][j] == '|'
-                                || (j == 16 && normalizeBoard[currentRow - 1][j] == '-')) {  //If there is a wall return a number out of bounds
+                        } else if (j == 16 && normalizeBoard[currentRow - 1][j] == '-') {  //If there is a wall return a number out of bounds
                             quantityMoves = 17;
                             return quantityMoves;
                         } else {
                             quantityMoves++;
                         }
+                    } else if (normalizeBoard[currentRow][j] == '|') {
+                        quantityMoves = 17;
+                        return quantityMoves;
                     } else {
                         quantityMoves++;
                     }
@@ -256,7 +266,8 @@ public class Checking {
                 //check 1 step right, if is empty then check 1 step forward
                 if (currentCol == 0
                         || (currentCol == 2 && currentRow == 14
-                        && normalizeBoard[currentRow + 2][currentCol - 2] == 'S')) {
+                        && normalizeBoard[currentRow + 2][currentCol - 2] == 'S')
+                        || normalizeBoard[currentRow][currentCol - 1] == '|') {
                     return quantityMoves;
                 }
                 quantityMoves = 0;
@@ -317,13 +328,14 @@ public class Checking {
     }
 
     public static int[] checkPositionPawnEnemie(char namePawn, int[] pawn1, int[] pawn2, int[] pawn3) {
+        System.out.println("Checking position enemie");
         switch (namePawn) {
             case 'N' -> {
                 if (pawn1[0] < pawn2[0] && pawn1[0] < pawn3[0]) {
                     return pawn1;
                 } else if (pawn2[0] < pawn3[0] && pawn2[0] < pawn1[0]) {
                     return pawn2;
-                } else if(pawn1[0] == pawn2[0] && pawn1[0] == pawn3[0]) {
+                } else if (pawn1[0] == pawn2[0] && pawn1[0] == pawn3[0]) {
                     pawn1[0] = 16;  //I modified de row just to not enter to if to put a wall
                     return pawn1;
                 } else {
@@ -335,7 +347,7 @@ public class Checking {
                     return pawn1;
                 } else if (pawn2[0] > pawn3[0] && pawn2[0] > pawn1[0]) {
                     return pawn2;
-                } else if(pawn1[0] == pawn2[0] && pawn1[0] == pawn3[0]) {
+                } else if (pawn1[0] == pawn2[0] && pawn1[0] == pawn3[0]) {
                     pawn1[0] = 16;  //I modified de row just to not enter to if to put a wall
                     return pawn1;
                 } else {
@@ -357,6 +369,10 @@ public class Checking {
             case 'N' -> {
                 //Checking next position for 'S'
                 if (normalizeBoard[enemieRow - 1][enemieCol] == '-') {  //Check if there is a wall in front of it
+                    if(enemieCol == 2 && normalizeBoard[enemieRow][enemieCol + 1] == '|'
+                            && normalizeBoard[enemieRow - 1][enemieCol - 1] == '*') {
+                        return false;
+                    }
                     if (checkAside(normalizeBoard, enemieRow, enemieCol, side)) {  //Check if there is a wall at right and left side
                         //Tiene los dos costados con pared, hora de chequear pared vertical
                         if (normalizeBoard[enemieRow - 1][enemieCol - 1] == '*') {  //Check left col
@@ -364,7 +380,7 @@ public class Checking {
                                 return true;
                             }
                         } else if (normalizeBoard[enemieRow - 1][enemieCol + 1] == '*') {   //Check right col
-                            if (normalizeBoard[enemieRow][enemieCol + 2] == ' '
+                            if (enemieCol < 14 && normalizeBoard[enemieRow][enemieCol + 2] == ' '
                                     && normalizeBoard[enemieRow][enemieCol + 3] == ' ') {
                                 return true;
                             }
@@ -378,9 +394,16 @@ public class Checking {
                                 && normalizeBoard[enemieRow - 1][enemieCol + 2] == ' ') {
                             return true;
                         }
+                    } else if (normalizeBoard[enemieRow - 1][enemieCol - 1] == '*'
+                            || normalizeBoard[enemieRow - 1][enemieCol + 1] == '*') {
+                        return true;
                     }
                 } else if (enemieCol < 15 && normalizeBoard[enemieRow - 1][enemieCol] == ' '
                         && normalizeBoard[enemieRow - 1][enemieCol + 2] == ' ') {
+                    return true;
+                } else if (enemieCol < 15 && normalizeBoard[enemieRow - 1][enemieCol] == ' '
+                        && normalizeBoard[enemieRow - 1][enemieCol + 2] == '-'
+                        && normalizeBoard[enemieRow - 1][enemieCol - 2] == ' ') {
                     return true;
                 } else if (enemieCol > 0 && enemieCol == 16 && normalizeBoard[enemieRow - 1][enemieCol] == ' '
                         && normalizeBoard[enemieRow - 1][enemieCol - 2] == ' '
@@ -392,13 +415,17 @@ public class Checking {
             case 'S' -> {
                 //Checking next position for 'N'
                 if (normalizeBoard[enemieRow + 1][enemieCol] == '-') {  //Check if there is a wall in front of it
+                    if(enemieCol == 2 && normalizeBoard[enemieRow][enemieCol + 1] == '|'
+                            && normalizeBoard[enemieRow + 1][enemieCol - 1] == '*') {
+                        return false;
+                    }
                     if (checkAside(normalizeBoard, enemieRow, enemieCol, side)) {  //Check if it is time to put wall 'v'
                         if (normalizeBoard[enemieRow + 1][enemieCol - 1] == '*') {  //Check left col
                             if (normalizeBoard[enemieRow][enemieCol - 2] == ' ') {
                                 return true;
                             }
                         } else if (normalizeBoard[enemieRow + 1][enemieCol + 1] == '*') {   //Check right col
-                            if (normalizeBoard[enemieRow][enemieCol + 2] == ' '
+                            if (enemieCol < 14 && normalizeBoard[enemieRow][enemieCol + 2] == ' '
                                     && normalizeBoard[enemieRow][enemieCol + 3] == ' ') {
                                 return true;
                             }
@@ -412,9 +439,16 @@ public class Checking {
                                 && normalizeBoard[enemieRow + 1][enemieCol + 2] == ' ') {
                             return true;
                         }
+                    } else if (normalizeBoard[enemieRow + 1][enemieCol - 1] == '*'
+                            || normalizeBoard[enemieRow + 1][enemieCol + 1] == '*') {
+                        return true;
                     }
                 } else if (enemieCol < 15 && normalizeBoard[enemieRow + 1][enemieCol] == ' '
                         && normalizeBoard[enemieRow + 1][enemieCol + 2] == ' ') {
+                    return true;
+                } else if (enemieCol < 15 && normalizeBoard[enemieRow + 1][enemieCol] == ' '
+                        && normalizeBoard[enemieRow + 1][enemieCol + 2] == '-'
+                        && normalizeBoard[enemieRow + 1][enemieCol - 2] == ' ') {
                     return true;
                 } else if (enemieCol > 0 && enemieCol == 16 && normalizeBoard[enemieRow + 1][enemieCol] == ' '
                         && normalizeBoard[enemieRow + 1][enemieCol - 2] == ' '

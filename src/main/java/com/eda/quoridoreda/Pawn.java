@@ -54,7 +54,8 @@ public class Pawn {
 
         int[] pawnEnemiePosition = Checking.checkPositionPawnEnemie(side, pawnS1, pawnS2, pawnS3);
 
-        if (pawnEnemiePosition[0] < 8 && walls > 0 && Checking.checkCanPutWall(normalizeBoard, pawnEnemiePosition, side)) {  //Agregar check de wall
+        if (pawnEnemiePosition[0] < 13 && pawnEnemiePosition[0] > 2
+                && walls > 3 && Checking.checkCanPutWall(normalizeBoard, pawnEnemiePosition, side)) {  //Agregar check de wall
             System.out.println("ENTRO IF PUT WALL");
             response = Wall.putWall(side, pawnEnemiePosition, gameId, turnToken, normalizeBoard);
         } else {
@@ -81,6 +82,7 @@ public class Pawn {
                 int movesToRight = Checking.checkQuantityMoveToRight(normalizeBoard, currentPositionPawnToMove, side);
                 int movesToLeft = Checking.checkQuantityMoveToLeft(normalizeBoard, currentPositionPawnToMove, side);
 
+                System.out.println("Right " + movesToRight + " Left " + movesToLeft);
                 if (movesToRight < movesToLeft) {
                     nextPosition = Move.moveRight(normalizeBoard, currentPositionPawnToMove, side);
 
@@ -148,16 +150,17 @@ public class Pawn {
         int[] pawnN2 = positionPawns.get("Pawn N 2");
         int[] pawnN3 = positionPawns.get("Pawn N 3");
 
-        currentPositionPawnToMove = choosePawnToMove(side, pawnS1, pawnS2, pawnS3);
-        currentRow = currentPositionPawnToMove[0];
-        currentCol = currentPositionPawnToMove[1];
-
         int[] pawnEnemiePosition = Checking.checkPositionPawnEnemie(side, pawnN1, pawnN2, pawnN3);
 
-        if (pawnEnemiePosition[0] > 10 && walls > 0 && Checking.checkCanPutWall(normalizeBoard, pawnEnemiePosition, side)) {  //Agregar check de wall
+        if (pawnEnemiePosition[0] > 3 && pawnEnemiePosition[0] < 14
+                && walls > 3 && Checking.checkCanPutWall(normalizeBoard, pawnEnemiePosition, side)) {  //Agregar check de wall
             System.out.println("ENTRO IF PUT WALL");
             response = Wall.putWall(side, pawnEnemiePosition, gameId, turnToken, normalizeBoard);
         } else {
+            currentPositionPawnToMove = choosePawnToMove(side, pawnS1, pawnS2, pawnS3);
+            currentRow = currentPositionPawnToMove[0];
+            currentCol = currentPositionPawnToMove[1];
+
             if (Checking.checkMoveForward(normalizeBoard, currentPositionPawnToMove, side)) {
                 nextPosition = Move.moveForward(normalizeBoard, currentPositionPawnToMove, side);
 
@@ -207,7 +210,7 @@ public class Pawn {
             //Armando json de respuesta de movimiento
             jsonResponse.put("action", "move");
             jsonResponse.put("data", data);
-            
+
             response = jsonResponse.toString();
         }
 
@@ -251,7 +254,6 @@ public class Pawn {
 
         int getRandomValue = ThreadLocalRandom.current().nextInt(0, max) + min;
         System.out.println("Pawn n° " + getRandomValue + " selected.");
-        
 
         switch (getRandomValue) {
             case 1 -> {
